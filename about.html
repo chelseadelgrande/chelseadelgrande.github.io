@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css" rel="stylesheet" />  
+
+    <title>CDG | Vizfolio | About</title>
+    <link rel="icon" href="images/brand3.png">  
+
+  </head>
+  <style>
+#github, #resume, #email{
+width:75% !important;
+}
+#line{
+border-top: 1px solid black;
+
+
+}
+
+  body { margin: 0; padding: 0; }
+	#map {  position:relative; top:0; bottom:0; width:100%; height: 500px }
+  .about-info h2 {
+    padding-bottom: 0px !important;
+  }
+
+  .overlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+
+    .overlay button {
+        font: 600 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        background-color: #3386c0;
+        color: #fff;
+        display: inline-block;
+        margin: 0;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+
+    .overlay button:hover {
+        background-color: #4ea0da;
+    }
+  </style>
+    <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"
+    charset="utf-8"></script>
+  <body>
+
+    <div class="container navbar">
+
+      <h1 class="logo">CHELSEA DEL GRANDE | VIZFOLIO</h1>
+      <div class="menu-icon">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </div>
+      <ul id="menu">
+        <li><a href="contact.html">Contact</a></li>
+        <li><a class="active"  href="about.html">About</a></li>
+        <li><a href="index.html">Work</a></li>
+      </ul>
+
+    </div>
+
+    <div class="container about">
+
+      <div class="row">
+
+        <div class="col-md-6">
+
+          <img class="img-responsive" src="images/CDG.jpg" alt="Pug">
+
+        </div>
+
+        <div class="col-md-6 about-info">
+
+          <h1>Geospatial Specialist &nbsp;&bull;&nbsp; Data Viz &nbsp;&bull;&nbsp; Washington, DC</h1>
+          
+          <p>A west coast native, currently based in Washington, DC implementing GIS solutions in the international development sector. I received a Master's in Geospatial Information Science from University of Maryland (2019), and a Bachelor's in Geography, Middle East Studies, and International Relations with an Arabic Minor from University of Arkansas (2015).</p>
+          <p>I enjoy turning points, lines and polygons into meaninful data structures/ viz. Most interested in web GIS dev via quick rendering front end analysis. I also appreciate open source platforms that provide equitable access to analysis and collection methods, which promote collaboration and data usage for decision making, specifically in hard to reach areas.</p>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 about-info">       
+            <button type="submit" class="btn btn-sm">AJAX | PHP | JQUERY</button>
+            <button type="submit" class="btn btn-sm">Angular | Ionic Framework | TypeScript</a></button>       
+            <button type="submit" class="btn btn-sm">ArcGIS Enterprise</button>
+            <button type="submit" class="btn btn-sm">ArcMap</button>
+            <button type="submit" class="btn btn-sm">AWS | S3</button>
+            <button type="submit" class="btn btn-sm">CREATIVE CLOUD | AI + ID</button>
+            <button type="submit" class="btn btn-sm">D3JS</button>
+            <button type="submit" class="btn btn-sm">ENVI</button>
+            <button type="submit" class="btn btn-sm">GeoJson</button>
+            <button type="submit" class="btn btn-sm">Google Maps API + Libraries</button>
+            <button type="submit" class="btn btn-sm">HTML | CSS</button>
+            <button type="submit" class="btn btn-sm">JavaScript</button>
+            <button type="submit" class="btn btn-sm">JSON | GeoJson</button>
+            <button type="submit" class="btn btn-sm">Mapbox</button>
+            <button type="submit" class="btn btn-sm">NodeJS</button>
+            <button type="submit" class="btn btn-sm">PostGIS | PostGres | SQL</button>
+            <button type="submit" class="btn btn-sm">PowerBI</button>
+            <button type="submit" class="btn btn-sm">Python | ArcPy</button>
+            <button type="submit" class="btn btn-sm">Tableau</button>
+            <button type="submit" class="btn btn-sm">TURFJS</button>
+ 
+        </div>
+
+      </div>
+      <div class="row">
+
+        <div class="col-sm-1">
+
+          <a  href= 'https://github.com/chelseadelgrande'>
+          <img id = github src= "images/github.png" alt="github">
+          </a>
+        </div>
+        <div class="col-sm-1">
+          <a  href= 'about/Chelsea Del Grande_USAID_General_072020.pdf'>
+          <img id = resume src= "images/resume.jpg" alt="resume">
+          </a>
+        </div>
+        <div class="col-sm-1 justify-content-between">
+          <a  href= 'mailto:chelseadelgrande@gmail.com'>
+          <img id = email src= "images/email.png" alt="email">
+          </a>
+        </div>
+      </div>
+    <div class="row">
+      <div class="col-sm-1">
+        <a  href= 'mailto:chelseadelgrande@gmail.com'>
+          <p><b>chelseadelgrande@gmail.com</b></p>
+        </a>
+      </div>
+    </div><br>
+    <div class = "row" id = "line">
+    </div>
+    <div class = "row">
+      <div class = "col-md-10 about-info">
+        <h2>My Locations Over the Years</h2>
+      </div>
+      <div class = "col-md-2 about-info">
+        <button class = "btn btn-sm float-right" id="replay">Replay</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12" id = "map">
+    </div>
+    </div>
+
+  </div>
+
+
+    <script src="about/locations.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="js/main.js"></script>
+
+  </body>
+</html>

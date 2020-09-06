@@ -1,0 +1,13 @@
+{
+  "name": "final",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular",
+  "proxies": [
+    {
+      "path": "",
+      "proxyUrl": "http://129.2.24.226:8080/mps/cdelgran/geog650/final/insert_campsites.php"
+    }
+  ]
+}

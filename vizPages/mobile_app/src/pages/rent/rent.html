@@ -1,0 +1,177 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+    OUR GEAR
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+      <ion-card-header>
+       <h2> Select Gear For Your Trip.</h2> 
+      </ion-card-header>
+      
+      <ion-card-content>
+              <ion-list>
+                  <ion-item>
+                    <ion-label>TENT</ion-label>
+                    <ion-checkbox value = "10" color="purple"  type = "number" [(ngModel)]="formData.tent" ></ion-checkbox>            
+                  </ion-item>
+                  <p>$10/day</p>
+                  <!--https://www.bing.com/images/search?view=detailV2&ccid=K2cpuweZ&id=22B8C16F8A6FB2D4E9CE323CD6C9414878911805&thid=OIP.K2cpuweZkNisHiVIr-796gHaFB&mediaurl=https%3a%2f%2fwww.belltent.co.uk%2fimage%2fcache%2fcatalog%2fshop%2ftents%2f5_metre_ultimate_pro_bell_tent%2fx5_metre_ultimate_PRO_bell_tent_13-1200x813.jpg.pagespeed.ic.Fy398Bcj0K.jpg&exph=813&expw=1200&q=tent&simid=608030864873620524&selectedIndex=43&ajaxhist=0-->
+                  <img src= "assets/imgs/tent.jpg"/>
+                  <ul>
+                      <li>Bug-proof mesh wall panels </li>
+                      <li>Waterproof fly and dual twin-stake vestibules </li>
+                      <li>Fly attaches with buckles for quick and secure setup </li></ul>
+
+                  <ion-item>
+                      <ion-label>FLEXI CHAIR</ion-label>
+                      <ion-checkbox color="purple" type = "number" [(ngModel)]="formData.chair"></ion-checkbox>
+                    </ion-item>
+                    <p>$5/day</p>
+                    <!--https://www.rei.com/product/109587/helinox-chair-zero-->
+                    <img src= "assets/imgs/chair.jpg"/>
+                    <ul>
+                        <li>Compact size makes it easy to pack and carry </li>
+                        <li>Stuff sack included </li>
+                        <li>Seat is 11 in. off the ground</li>
+                    </ul>
+
+                    <ion-item>
+                        <ion-label>HAMMOCK</ion-label>
+                        <ion-checkbox color="purple" type = "number" [(ngModel)]="formData.hammock" ></ion-checkbox>
+                      </ion-item>
+                      <p>$5/day</p>
+                      <!--https://www.rei.com/product/754773/eno-doublenest-hammock-->
+                      <img src= "assets/imgs/hammock.jpg"/>
+                      <ul>
+                          <li>Maximum capacity of 400 lbs.  </li>
+                          <li>Hammock includes a built-in stuff sack  </li>
+                          <li>Packs down to the size of a grapefruit </li>
+                      </ul> 
+
+                    <ion-item>
+                          <ion-label>POD SLEEPING BAG</ion-label>
+                          <ion-checkbox color="purple" type = "number" [(ngModel)]="formData.warmsleeping" ></ion-checkbox>
+                    </ion-item>
+                    <p>$5/day</p>
+                    <!--https://www.rei.com/product/127388/rei-co-op-helio-sack-55-sleeping-bag-->
+                    <img src= "assets/imgs/lightsleepingbag.jpg"/>
+                    <ul>
+                        <li>Offset quilt construction gives even coverage with no cold spots   </li>
+                        <li>Water-resistant synthetic fill keeps insulating in damp conditions </li>
+                    </ul> 
+
+                    <ion-item>
+                        <ion-label>2.0 SLEEPING BAG</ion-label>
+                        <ion-checkbox color="purple" type = "number" [(ngModel)]="formData.coldsleeping" ></ion-checkbox>
+                      </ion-item>
+                      <p>$5/day</p>
+<!--https://www.rei.com/product/110922/rei-co-op-magma-10-sleeping-bag-mens-->
+                      <img src= "assets/imgs/coldweathersleeping.jpg"/>
+                      <ul>
+                          <li>3D footbox increases the insulation and room for your feet, for more warmth and comfort </li>
+                          <li>Durable insulation provides an exceptional combination of warmth, softness, low weight, and packability </li>
+                      </ul> 
+                      
+                      <ion-item>
+                          <ion-label>SLEEPING PAD</ion-label>
+                          <ion-checkbox color="purple" type = "number" [(ngModel)]="formData.sleepingpad" ></ion-checkbox>
+                        </ion-item>
+                        <p>$5/night</p>
+                        <!--https://www.rei.com/product/829826/therm-a-rest-z-lite-sol-sleeping-pad-->
+                        <img src= "assets/imgs/sleepingpad.jpg"/>
+                        <ul>
+                            <li>Tapered mummy shape reduces weight and packed size   </li>
+                            <li>R-Value equals 3.7 </li>
+                            <li>Laminated 30-denier ripstop polyester provides a good balance between low weight and durability  </li>
+                        </ul> 
+
+                      <ion-item>
+                         <ion-label>JETBOIL STOVE</ion-label>
+                         <ion-checkbox color="purple" type = "number" [(ngModel)]="formData.stove"></ion-checkbox>
+                      </ion-item>
+                      <p>$5/day</p>
+                      <!--https://www.rei.com/product/127968/jetboil-flash-cooking-system-->
+                      <img src= "assets/imgs/stove.jpg"/>
+                      <ul>
+                          <li>Cooktime (100 seconds) is based on the amount of time it takes for the Jetboil Flash to boil 16 fl. oz. (2 cups) of water </li>
+                          <li>Improved stove-vessel integration allows easy on/off  </li>
+                          <li>Color-change heat indicator  </li>
+                      </ul> 
+
+                      <ion-item>
+                        <ion-label>FULL STOVE & KITCHEN SET</ion-label>
+                        <ion-checkbox color="purple" type = "number" [(ngModel)]="formData.stovekit" ></ion-checkbox>
+                      </ion-item>
+                      <p>$10/day</p>
+                      <!--https://www.rei.com/product/106902/msr-pocketrocket-stove-kit-->
+                      <img src= "assets/imgs/stovekit.jpg"/>
+                      <ul>
+                          <li>Minimalist, nesting cookset includes a 2-liter hard-anodized pot, a strainer pot lid, 2 deep bowls, 2 insulated mugs, an integrated pot handle, and 2 folding sporks  </li>
+                          <li> Two 12.5 fl. oz. double-walled insulated polypropylene mugs keep your drinks hot and easy to handle; includes sip-through lids </li>
+                          <li>Cookset nests within the 2-liter pot for easy packing  </li>
+                      </ul> 
+
+                      <ion-item>
+                        <ion-label>TREKKING POLES</ion-label>
+                        <!--https://www.rei.com/product/895931/black-diamond-trail-back-trekking-poles-pair-->
+                        <ion-checkbox color="purple" [(ngModel)]="formData.poles" ></ion-checkbox>
+                      </ion-item>
+                      <p>$5/day</p>
+                      <img src= "assets/imgs/trekkingpoles.jpg"/>
+                      <ul>
+                          <li>Long Flex tips with low profile trekking baskets  </li>
+                          <li>Adjustability to suit the terrain at hand  </li>
+                      </ul> 
+
+                      <ion-item>
+                          <ion-label>LARGE 70 PACK</ion-label>
+                          <ion-checkbox color="purple" [(ngModel)]="formData.largepack" ></ion-checkbox>
+                        </ion-item>
+                        <p>$5/day</p>
+                        <!--https://www.rei.com/rei-garage/product/114769/gregory-amber-70-pack-womens-->
+                        <img src= "assets/imgs/largepack.jpg"/>
+                        <ul>
+                            <li>Large mesh pocket in the front provides easy access to frequently needed items   </li>
+                            <li>Hydration-compatible design  </li>
+                        </ul> 
+                        
+                        <ion-item>
+                          <ion-label>MEDIUM 45 PACK</ion-label>
+                          <ion-checkbox color="purple" type = "number"[(ngModel)]="formData.medpack" ></ion-checkbox>
+                        </ion-item>
+                        <p>$5/day</p>
+                        <!--https://www.rei.com/product/895056/gregory-zulu-40-pack-mens-->
+                      <img src= "assets/imgs/medpack.jpg"/>
+                      <ul>
+                          <li>Top-load access to main compartment; zippered sleeping bag access</li>
+                          <li>Floating, removable top lid with zippered stash pocket; zippered mesh pocket under the lid </li>
+                      </ul> 
+                      <ion-item>
+                          <ion-label>SMALL 25 PACK</ion-label>
+                          <ion-checkbox color="purple" [(ngModel)]="formData.smallpack"></ion-checkbox>
+                        </ion-item>
+                        <p>$5/day</p>
+                        <!--https://www.rei.com/product/111300/osprey-tempest-20-pack-womens-->
+                      <img src= "/assets/imgs/smallpack.jpg"/>
+                      <ul>
+                          <li>Dual zippered panel access to main compartment </li>
+                          <li>Integrated raincover </li>
+                      </ul> 
+                      <ion-item>
+                          <button round color = "blue" ion-button text-center block [disabled]="false" ion-button (click) ="goToFindPage()">Continue</button>
+                          <button round color = "blue" ion-button text-center block ion-button (click) = "goToRentPage()" >Reset</button>
+                        </ion-item>
+                </ion-list>
+      
+            </ion-card-content>
+   </ion-card>
+   </ion-content>
+   
+
+
+
+

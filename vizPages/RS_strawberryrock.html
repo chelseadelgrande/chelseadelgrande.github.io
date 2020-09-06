@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Chelsea Del Grande | Vizfolio</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+
+    <style>
+        body { margin:0; padding:0; }
+        #map, #map2 { position:relative; top:0; bottom:0; width:100%; }  
+
+        select, option{
+            font-family: 'Open Sans', sans-serif;
+            color: white !important;
+            position: relative;
+            width: 100%;
+            word-wrap: normal;
+            font-size:13px;
+            background-color: rgb(59, 59, 59);
+            border-color: rgb(59, 59, 59);
+            border: .5px;
+            padding: 8px;
+        }
+        select:hover, option:hover, #variables[i]{
+            background-color: #555;
+            color: white;
+        }
+
+        .legend label, .legend span {
+            display:block;
+            float:left;
+            height:15px;
+            width:20%;
+            text-align:center;
+            font-size:9px;
+            color:#808080;
+  }
+        .list-group {
+            text-align:left;
+        }
+/* Do a fancy data transition for browsers that support it */
+        path {
+            -webkit-transition:fill 200ms;
+             transition:fill 200ms;
+  }
+  </style>
+
+    <!-- jQuery is required for this example. -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+
+    <div class="container navbar">
+
+      <h1 class="logo">Chelsea Del Grande | Vizfolio</h1>
+      <div class="menu-icon">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </div>
+      <ul id="menu">
+        <li><a href="../contact.html">Contact</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../index.html">Work</a></li>
+      </ul>
+
+    </div>
+
+    <div class="container about">
+        <div class="row">
+            <div class="col-md-6 about-info">
+              <h1>Canopy Height and LPI Change Along Strawberry Rock Trail, Trinidad, CA &nbsp;&bull;&nbsp; Identifying Change over time (2010 - 2015)</h1>
+    
+              <p>This study uses Canopy Height Modelling (CHM) and Laser Penetration Index (LPI) as tools to identify change in canopy height and vegetation density between 2010 and 2015 along the Strawberry Rock Trail in Trinidad California. Strawberry Rock is a popular destination for local hikers located along privately owned logging property. This study identifies the true impact to canopy height and vegetation over time using lidar to obtain canopy height and vegetation density metrics. </p>
+
+ 
+            </div>
+            <div class="col-md-6 about-info">
+                <img src="./RS_strawberryrock/strawberryrock.jpg" alt="study1">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 about-info">
+                <h1>Introduction and Objectives</h1>
+                <p>The Strawberry Rock trail is popular amongst Humboldt County residents, and is located along Green Diamond Logging Company’s land in Trinidad, CA. Green Diamond has historically engaged in on and off logging operations throughout the area – already depleting the remaining old growth Sequoia Sempervirens. This study was intended to identify the change in canopy height and vegetation density over time, to identify the true impact or conservation practices that the Green Diamond holds to along the trail. The area has second growth Sequoia Sempervirens as well as younger generation growth redwoods due to selective cutting operations. Given this known change, I would like to see how rapidly the change of canopy height over time is detected using lidar, and if the area has experienced vegetation growth over time due to public concerns, or continued canopy loss, which is historically expected from the company. </p>
+                <p>The defining characteristics of the study area is the redwood forest (Sequoia Sempervirens) along the coast of Northern California in Trinidad, CA. This plot of land is privately owned by Green Diamond and is not part of the national parks system, but is still very important to the local community in regards to conserving the second growth trees. </p>
+            </div>
+        </div>
+     
+      <div class="row">
+        <div class="col-md-6 about-info">
+            <h1>Data and Collection</h1>
+
+            <p>
+                <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">Lidar Dataset</th>
+                        <th scope="col">Projection</th>
+                        <th scope="col">Point Spacing</th>
+                        <th scope="col">1st Returns</th>
+                        <th scope="col">2nd Returns</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">2010 NOAA LAS</th>
+                        <td>NAD83NSRS2007 California 1 ft</td>
+                        <td>~1.7 (Cell Size 8)</td>
+                        <td>17,159,518 - 80.83</td>
+                        <td>3,491,683 - 16.45%</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2015 NOAA LAS </th>
+                        <td>NAD83NSRS2007 California 1 ft</td>
+                        <td>~1.7 (Cell Size 8)</td>
+                        <td>16,115,861 – 37.91</td>
+                        <td>9,010,327 – 21.20%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            <p>
+
+        </div>
+        <div class="col-md-3 about-info">
+            <h2>2010 Lidar Point Cloud by Elevation</h2>
+            <img src="./RS_strawberryrock/2010_pointcloud.png" alt="2010point">
+        </div>
+        <div class="col-md-3 about-info">
+            <h2>2015 Lidar Point Cloud by Elevation</h2>
+            <img src="./RS_strawberryrock/2015_pointcloud.png" alt="2015point">
+        </div>
+        <div class="row">
+            <div class="col-md-6 about-info">
+                <h1>Methods: Canopy Height Model (CHM)</h1>
+            <br><br><br>
+         
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><b>1. LAS to Raster:</b> Created 2010 and 2015 DTMs by filtering by second returns and using minimum values.</li>
+                    <li class="list-group-item"><b>2. LAS to Raster:</b> Created 2010 and 2015 DSMs by filtering second returns and maximum values.</li>
+                    <li class="list-group-item"><b>3. Minus Tool:</b> Subtracted DSM from DTM to find CHM for each year, and used the Extract by Mask Tool to create a common raster area for both datasets. </li>
+                    <li class="list-group-item"><b>4. Minus Tool:</b> Subtracted 2015 CHM from the 2010 CHM to get the CHM Change over time. </li>
+                  </ul>
+                  </ul>
+            </div>
+            <div class="col-md-6 about-info">
+                <h2>Minus Tool: 2015 CHM - 2010 CHM</h2>
+                <img src="./RS_strawberryrock/methodschm.png" alt="minuschm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 about-info">
+                <h1>Methods: Analyzing CHM and Laser Penetration Index (LPI)</h1>
+            <br><br><br>
+         
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><b>1. LAS to Multipoint:</b> Identified first returns for 2010 and 2015</li>
+                    <li class="list-group-item"><b>2. Buffer and Clip:</b> Created 100 meter buffer around plot zones (points) along the Strawberry Rock Trail area. Clipped my multipoints to the buffer zone to decrease my data size.</li>
+                    <li class="list-group-item"><b>3. Multipoint to Singlepoint:</b> Obtained singlepoint features.</li>
+                    <li class="list-group-item"><b>4. Add XY Data, Field Calculator and Extract Values to Points:</b> Obtained x, y, z, and raster values for data to obtain the height and canopy height.</li>
+                    <li class="list-group-item"><b>5. Spatial Join:</b> Joined singlepoints with extracted values to points so they were associated with the appropriate plots.</li>
+                    <li class="list-group-item"><b>6. Excel Manipulation:</b> Found the mean, 75th percentile, 95th percentile, max, and LPI for both 2010 and 2015 datasets, and then subtracted the results to find the difference/true change over time in the corresponding plot zones. </li> 
+                </ul>
+            </div>
+
+            <div class="col-md-6 about-info">
+
+
+                <h2>Plot Zones with 2010 and 2015 Value Points</h2>
+                <div class="col-md-6 about-info">
+                    <img src= "./RS_strawberryrock/20102015_valuepoints.png" alt="study1"><br><br>
+
+                    <img src="./RS_strawberryrock/valuepoints_close.png" alt="study1">
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6 about-info">
+                <h1>Results and Discussion</h1>
+    
+                <p>In general, the trend of canopy height growth/change over time was not consistent across plots and is best explained plot by plot. On the other hand, the LPI did show consistent results. It showed that for 10 of the plots (83%), the LPI decreased from 2010 – 2015, which shows that the vegetation became more dense in those 5 years. </p>
+            
+                <h2>Change over Time: Plot 13 (Image Right)</h2>
+              
+                <p>The change in canopy height results from 2010 to 2015 show that the plot with the largest average height change over five years was plot 13. The mean height in this plot decreased by 33.43 ft, falling from an average of 79ft in 2010 to 46ft in 2015. Consistent with the loss of tree height, the LPI for plot 13 increased by .091 from 2010 to 2015; increasing from .029 to .121.</p>
+
+                <h2>Change over Time: Plot 2 </h2>
+                <p>Plot 2 also showed significant change, in differing metrics. While the average canopy height decreased 12 ft between 2010 and 2015, starting at 33 ft in 2010 and lowering to 21 ft in 2015, the 95th percentile increased from 62 to 69.6 and the max height increased from 82 ft to 90ft. Therefore, untouched trees grew much taller, increasing the max and the 95th percentile over the years, but overall the average lowered, showing that across the whole plot there was loss of growth or selective cutting in the area. Additionally, there was an increase in LPI by .186, growing from .42 in 2010 to .228 in 2015. This confirms that there was loss in growth, or selective cutting in the areas since a higher LPI means there is less vegetation.</p>
+            </div>
+            <div class="col-md-6 about-info">
+                <img src="./RS_strawberryrock/zoommethod.png" alt="study1">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 about-info">
+                <h2>Change over Time: Plot 1</h2>
+                <p>Plot 1 showed the largest change in LPI between 2010 and 2015 with a LPI decrease of .236; lowering from .245 in 2010 to .009 in 2015. Consistent with an increase in vegetation, the mean canopy height also rose 7.62ft, rising from 6.34ft in 2010 to 13.967 ft in 2015, Additionally, the percentiles and maximum height also rose from 2010 to 2015, showing that plot 1 showed the strongest growth of all plots between 2010 and 2015. The 95th percentile rose 4.885 from 23.657 in 2010 to 26.8 in 2015; and the maximum height rose 2.433 ft; rising from 114 ft in 2010 to 116.8 ft in 2015. </p>
+            </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-md-4 about-info">
+            <h2>Plot 13</h2>
+            <img src="./RS_strawberryrock/zoommethod.png" alt="plot13">
+        </div>
+        <div class="col-md-4 about-info">
+            <h2>Plot 2</h2>
+            <img src="./RS_strawberryrock/plot2.png" alt="plot2">
+        </div>
+        <div class="col-md-4 about-info">
+            <h2>Plot 1</h2>
+            <img src="./RS_strawberryrock/plot1.png" alt="plot1">
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12 about-info">
+    
+          <h1>Conclusion</h1>
+    
+            <p>Altogether, the CHM and LPI average height results differed across the 13 plots, with 5 plots increasing in average height, and 8 decreasing in average height. The combined LPI results, which highlight a decrease in 10 of the plots shows that, shows that while there is not unanimous height change across plots, the overall density is in fact increasing between 2010 and 2015.</p>                
+            <p>Results by plots show that there is likely a section in the western portion of the dataset, plot 2 that experienced significant loss of growth or selective cutting. This is consistent with logging patches in the area. Additionally, there was significant growth shown in plot 1 and LPI density growth in plot 13, which show that there is still respect for conservation in logging practices on private land in the area. </p>
+            <p>In the future, I would like to improve this analysis by obtaining observed values of the selected plots to create a RMSE with the predicted values shown here. Additionally, it would be helpful to identify coefficients to develop regression analysis to identify reasons for change, or areas of interest.</p>
+        </div>
+    
+    </div>
+
+</div>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+   
+    </main><!-- /.container -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  </body>
+</html>

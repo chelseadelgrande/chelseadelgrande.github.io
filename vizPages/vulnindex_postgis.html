@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="icon" href="images/brand3.png">
+    
+    <title>Chelsea Del Grande | Vizfolio</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+
+    <style>
+        body { margin:0; padding:0; }
+        #map, #map2 { position:relative; top:0; bottom:0; width:100%; }  
+
+        select, option{
+            font-family: 'Open Sans', sans-serif;
+            color: white !important;
+            position: relative;
+            width: 100%;
+            word-wrap: normal;
+            font-size:13px;
+            background-color: rgb(59, 59, 59);
+            border-color: rgb(59, 59, 59);
+            border: .5px;
+            padding: 8px;
+        }
+        select:hover, option:hover, #variables[i]{
+            background-color: #555;
+            color: white;
+        }
+
+        .legend label, .legend span {
+            display:block;
+            float:left;
+            height:15px;
+            width:20%;
+            text-align:center;
+            font-size:9px;
+            color:#808080;
+  }
+        .list-group {
+            text-align:left;
+        }
+/* Do a fancy data transition for browsers that support it */
+        path {
+            -webkit-transition:fill 200ms;
+             transition:fill 200ms;
+  }
+  </style>
+
+    <!-- jQuery is required for this example. -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+
+    <div class="container navbar">
+
+      <h1 class="logo">Chelsea Del Grande | Vizfolio</h1>
+      <div class="menu-icon">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </div>
+      <ul id="menu">
+        <li><a href="../contact.html">Contact</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../index.html">Work</a></li>
+      </ul>
+
+    </div>
+
+    <div class="container about">
+        <div class="row">
+            <div class="col-md-6 about-info">
+              <h1>Vulnerability and Suitability Analysis in Wade Hampton Census Tract’s Alaska Native Areas (ANAs) Using PostGIS Spatial Database  </h1>
+    
+                <p>Climate changes in Alaska have become a rising issue for Alaska Native Areas (ANAs) since the 1980s. Temperatures in Alaska have risen 3.5 degrees Celsius since the 1950s, which is twice the global average (Bronen, 2013). Consequently, rising temperatures and snow cover change have induced natural thawing of permafrost, which has led to accelerated rates of erosion and flooding. Historically, permafrost kept the subsoil structure frozen and intact, particularly around coastal communities. As permafrost melts, coastal communities, and particularly ANAs, face the impacts of flooding and erosion, ultimately threating the physical infrastructure of homes, schools and healthcare facilities. Due to climate induced changes in the ANA communities, ANAs are looking at relocation options for their villages.  </p>
+            </div>
+            <div class="col-md-6 about-info">
+                <h2>Tract level ANAVI of Wade Hampton Tract</h2>
+                <img src="./vuln_postgis/studyarea1.png" alt="study1">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 about-info">
+                <h2>Background</h2>
+                <p>Previous studies (my capstone) used a tract level ANA Vulnerability Index (ANAVI) and identified the Wade Hampton Census Area as the most vulnerable tract to socioeconomic and environmental variables between 2006 and 2016. This study will serve to identify the socioeconomic and environmental suitability of the 19 ANAs that intersect the Wade Hampton Area. Additionally, the database will serve to identify potential suitable tabblocks for ANAs who seek relocation for their village due to climate impacts.</p>
+                <p>Changes in the physical land structure and community development characteristics play a major role in the devastation affecting ANAs, which force government agencies to intervene in their communities with risk assessment mechanisms. Flooding and erosion pose a looming environmental threat to the 213 ANAs, particularly coastal villages (Bronen 2013). Increasing air temperature has resulted in rising sea levels due to decreasing Arctic ice extent. Additionally, changes in migration patterns due to federal and state government development in the villages has left communities tied to infrastructure in one location rather than historical migratory locations. As ANAs face flooding and infrastructure destruction in their current geographic boundaries, government agencies, including the Government Accountability Office (GAO), are assessing the impacts and defining protection mechanisms and relocation efforts for the most impacted ANAs (Bronen 2013). </p>
+                <p>The two major variables that affect the physical landscape of ANAs are flooding and erosion. Across Alaska, the depletion of permafrost due to warmer temperatures is affecting the integrity of the community landscape. Permafrost holds soil intact, but as it melts, the soil erodes, and infrastructure and sewage systems sink. Coastal communities are more vulnerable to floods and storms as Arctic sea ice melts. Historically, sea ice protected ANAs from winds off the coast, but depleting ice caps have increased winds and overall destruction to their infrastructure during storm events (Bronen 2013).</p>
+                <p>Another issue that has impacted the livelihood of ANA communities is their reliance on government built public facilities, which turned communities away from their historic patterns of migration. Migration patterns changed in the 19th Century when the U.S. Department of Interior’s Bureau of Education required that children attend school. With this, government-built infrastructure including power plants, schools, health facilities and airports established permanent ANA communities (Bronen 2013). Consequently, the destruction of public facilities from climate-based impacts increased the overall impact of the damages since the infrastructure has increased in value to the communities over time. Overall, the transition to permanent communities has limited the ANAs’ ability to adapt to climate-based physical changes in their landscape and are now facing destruction of the infrastructure they rely on for education, healthcare and housing.  </p>
+                <p>While ANAs have been assessing the impacts of erosion and flooding on their land since the 1980s, state and federal government agencies are now also seeking protection mechanism for their communities. In 2003, the GAO reported that flooding and erosion affects 86% of the ANAs (Bronen 2013). Additionally, the GAO and U.S. Army Corps identified the seven most affected villages (Dillingham, Bethel, Kivalina, Kaktovik, Shishmaref, Newtok and Unalakleet), and determined the viability and cost efficiency of erosion protection plans versus relocation efforts for each village, rising as high as $95 million for the relocation one village. The State of Alaska also intervened, developing an Immediate Action Workgroup (IAWG) to determine the needs of the ANAs, and the impacts of climate-based effects on the communities. Therefore, climate change related impacts on the physical landscape and infrastructure of ANAs are now requiring intervention from federal and state governments to evaluate risk assessment and relocation plans moving forward (Bronen 2013).   </p>
+
+          </div>
+        </div>
+     
+    <div class="row">
+        <div class="col-md-6 about-info">
+            <h2>Study Area</h2>
+            <p>Alaska contains 167 tracts and 213 Alaska Native Areas. The census tract is a geographic boundary that holds a population count between 1,200 – 8,000 in standard statistical areas, and between 480 and 3,200 in tribal census tract (“Census Tracts for the 2020 Census-Final Criteria” 2018). Census tracts are relatively permanent small-area geographic divisions of a county or statistically equivalent entity defined for the tabulation and presentation of data from the decennial census and other statistical programs. In Alaska, the average tract area is 1246.04 square miles and an average population of 604 residents per tract (“Census Tracts for the 2020 Census-Final Criteria” 2018). The low population threshold in Alaska is due to the mix of standard and tribal statistical tract areas.  </p>
+            <p>In Alaska, the American Indian Areas are defined as Alaska Native Areas (ANAs), which cover two federally recognized and statistic tribal boundaries: Alaska Native Regional Corporations (ANRCs) and Alaska Native Village Statistical Areas (ANVSAs). Alaska contains 12 ANRCs, which are regional corporations that serve for-profit and non-profit affairs of the tribal residents (“American Indian Areas (AIAs) Program for the 2010 Census-Notice of Final Criteria and Guidelines” 2008). ANVSAs hold the statistical boundary of densely populated tribal residents of an Alaska Native Village (ANV). Residents of ANSAs are either members of the corresponding ANV or are receiving government services from the ANV (“American Indian Areas (AIAs) Program for the 2010 Census-Notice of Final Criteria and Guidelines” 2008).  </p>
+
+        </div>
+        <div class="col-md-6 about-info">
+            <img src="./vuln_postgis/studyarea2.png" alt="study1">
+            <h2>Objectives </h2>
+            <p><b>1. Identify ANAs that are vulnerable to socioeconomic and/or environmental factors. </b></p>
+            <p><b>2. Identify tabblocks near ANAs within Wade Hampton Area Census to relocate ANAs experiencing flooding and erosion. </b></p>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 about-info">
+            <h2>Conceptual Framework | ER Diagram </h2>
+            <p>The components of the PostGIS database are shown in Figure 3. Overall, tracts include ANAs, and ANAs hold the variables we are most interested in (percent poverty, school enrollment, high school graduates, health insured, population and housing units). Additionally, land use land cover (LULC) is derived for each ANA boundary, while rise sink areas and rivers intersect the ANA boundaries. This helps identify what factors might negatively impact an ANA. </p>
+            <p>To identify potential relocation tabblocks, ANAs also have a one to one relationship with tabblocks, and tabblocks contain streets and airports, which are desirable attributes of a new location. </p>
+
+        </div>
+        <div class="col-md-6 about-info">
+            <img src="./vuln_postgis/erdiagram.png" alt="study1">
+        </div>
+    </div>
+
+            <div class="row">
+                <div class="col-md-12 about-info">
+                    <h2>Data Collection</h2>
+            <p>
+                <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">Data Source</th>
+                        <th scope="col">Data Table/Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Year</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">American Indian Area Boundary: Variables Derived from American Community Survey (ACS) US Census Bureau </th>
+                        <td>AIA_Variables<br>
+
+                            •	Percent Poverty 2016<br>
+                            •	Percent School Enrollment 2016<br>
+                            •	Percent High School Graduates 2016<br>
+                            •	Percent Insurance 2016<br>
+                            •	Distance to Rise/Sink Areas<br>
+                            •	Slope within 100 Mile Buffer of Rivers
+                            </td>
+                        <td>Polygon Shapefile</td>
+                        <td>2012  – 2016 5-Year Estimates</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">US Census Bureau  </th>
+                        <td>Boundary and Annexation (BAS) 2018 Tabblock </td>
+                        <td>2018</td>
+                        <td>Shapefile - Polygon</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">U.S. Geological Survey National Hydrography Dataset (AK)  </th>
+                        <td>Point layer of rise/sink water body areas</td>
+                        <td>Point Shapefile</td>
+                        <td>2016</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">U.S. Geological Survey National Hydrography Dataset (AK)  </th>
+                        <td>Polyline layer of rivers</td>
+                        <td>Polyline Shapefile</td>
+                        <td>2016</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">USDA Digital Elevation Model (DEM)</th>
+                        <td>Digital Elevation Model</td>
+                        <td>Raster DEM</td>
+                        <td>2016</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">USGS Glovis</th>
+                        <td>LULC Change 2006 derived from Landsat 5 Imagery
+
+                            Five Classes:<br>
+                            •	Water<br>
+                            •	Marsh<br>
+                            •	Dry Land<br>
+                            •	Grass<br>
+                            •	High Vegetation
+                            </td>
+                        <td>TIF</td>
+                        <td>2006</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">USGS Glovis</th>
+                        <td>LULC Change 2016 derived from Sentinnel-2B Imagery<br>
+
+                            Five Classes:<br>
+                            •	Water<br>
+                            •	Marsh<br>
+                            •	Dry Land<br>
+                            •	Grass<br>
+                            •	High Vegetation
+                            
+                            </td>
+                        <td>TIF</td>
+                        <td>2016</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 about-info">
+            <h2>Methodology</h2>
+            <p>In order to utilize data in a PostGIS database, the tables needed to be cleaned and processed with the appropriate column fields. The below methods were used.</p>
+            <p>Slope along River Buffer: The Zone of influence that effects erosion along rivers in Alaska is determined to be 100 meters. Therefore, the Buffer Tool is used in ArcMap to create a 100 meter buffer around the rivers in the most vulnerable tract from the ANAVI. The DEM is loaded into the Slope Tool in ArcMap, then Zonal Statistics are used to determine the AIAs with the largest amount of slope changes within 100 meters of a river. </p>
+            <p>Raster Landsat and Sentinnel Aerial Imagery: Since clouds are present within the datasets, atmospheric correction is used to account for scattering using the Dark Subtract Tool in ENVI. Additionally, images with 10% cloud coverage are given masks to remove the lack of accurate data in the clouded areas. 16 Landsast images and 31 Sentinnel images are mosaicked with 50 pixel seamlines using the Mosaic Tool in ENVI to account for the Wade Hampton Census Tract, the most vulnerable tract. The images are masked to the ANA boundaries using the Build Mask Tool in ENVI, to focus the LULC change on the ANA geography. Additionally, stich seams are masked so the No Data values to not corrupt the classification pixel values.</p>
+            <p>Unsupervised ISODATA Classification: Given the range of land cover types throughout the 19 ANAs, unsupervised classification is the best method to capture the different landscapes across 19 areas. ISODATA uses class means evenly distributed across space, then iterates the remaining pixels given their relationship to the means (“ISODATA” n.d.). Each iteration recalculates the means and reclassifies means with respect to the new means until pixels in each class change by less than the selected pixel change threshold, or the number of maximum iterations is met. The 2006 and 2016 data uses a maximum of eight classes with six iterations. An eight class threshold is used to ensure that all necessary classes are captured for classification. </p>
+            <p>To understand the different landscapes, the eight classes are explored with the ENVI Post Classification Class Statistics Tool and by toggling on and off the areas while zoomed in and comparing to the aerial imagery. Additionally, Google Maps is used to get an understanding of the ground truth, since Google Maps uses a finer resolution than Landsat and Sentinnel imagery. </p>
+            <p>The final ISODATA classification used five classes (water, marsh, dry land, grass/low vegetation, and vegetation) for 2006 and 2016. </p>
+            <p>Converting ENVI Results to ArcMap: Data is migrated from ENVI into ArcMap to identify the area of LULC change over time throughout each ANA boundary. To bring data into ArcMap, the ENVI Classification to Vector, Vector to ROI, and Classic ROI to Shapefile tools are used. This ensures the data is in the proper format for use in ArcMap. In ArcMap, the 2006 and 2016 shapefiles are joined to the ANA variable shapefiles shown in Table 9 using the Spatial Join Tool. The LULC change is the input feature area, and the ANA variables are the join features with a one to many relationship. The LULC change difference is calculated for each land cover type in each ANA boundary by subtracting the 2006 LULC change in square meters from the 2016 LULC change in square meters. This will be used in PostGIS to identify the amount of change over time.</p>
+            <p>Importing Data to PostGIS: Shapefiles were imported to a PostGIS table using the PostGIS 2.0 Shapefile and DBF Loader Exporter with an SRID of 4326, to ensure the data was projected. Next, the data needed to answer the following questions.</p>
+        
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 about-info">
+            <h2>Vulnerability Analysis</h2>
+            <p>Below are a series of methods used to identify the impacts of socioeconomic and environmental variables on the ANAs, and potential tabblocks for relocation efforts. </p>
+            <div style="width:100%;height:350px;line-height:1em;overflow:scroll;padding:3px;background-color:#FCFADD;color:#714D03;scrollbar-base-color:rgb(233, 232, 230);">
+                <b>1.	Find the Alaska Native Areas that have the highest poverty, lower health insurance coverage, lowest school enrollment and lowest percent high school graduates.</b><br>
+select aiannhce as "GEOID", name as "NAME", percpov as "PERCENT POVERTY", percschenr as "PERCENT SCHOOL ENROLLMENT", perchsgrad as "PERCENT HS GRADUATES", healthinsp as "PERCENT HEALTH INSURED",
+tothus as "TOTAL HOUSING UNITS", totpop as "TOTAL POPULATION"<br>
+from aia_vars<br>
+order by percpov desc, healthinsp asc, percschenr asc, perchsgrad asc<br><br>
+
+<b>2.	Find the ANAs that contain rise/sink areas, have greater than 50% coverty, less than 50% school enrollment and less than 70% high school graduates. Note, these percentages were defined after completing the first query, and understanding the distribution of percentages in the data. These percentages reflect the most impoverished areas.</b><br>
+
+select a.aiannhce, a.name<br>
+from aia_vars a<br>
+left join risesink r on ST_Contains(a.geom, r.geom )<br>
+where a.percpov > '50' AND a.percschenr < '50' AND a.perchsgrad < '70'<br> 
+order by a.aiannhce<br><br>
+
+<b>3.	Find the number of rise sink areas within each ANA</b><br>
+
+select a.name, a.gid, count(risesink.geom) AS risesink_count<br>
+from aia_vars a LEFT JOIN risesink <br>
+on st_contains(a.geom,risesink.geom) <br>
+group by a.gid<br>
+order by a.aiannhce<br><br>
+
+<b>4.	Calculate the distance between each ANA and river as a new field</b><br>
+
+ALTER table aia_vars ADD COLUMN dist DOUBLE PRECISION;<br>
+UPDATE aia_vars SET dist = ST_Distance(aia_vars.geom, rivers.geom)<br>
+FROM (SELECT geom from aia_vars where gid = 1) rivers;<br><br>
+
+<b>5.	Find the average distance to rivers and group by ANA.</b><br>
+
+SELECT a.aiannhce, a.name as "NAME", AVG(a.dist) as "AVG_DIST"<br>
+FROM aia_vars a<br>
+GROUP BY a.aiannhce, a.name, a.dist<br>
+ORDER BY a.aiannhce<br><br>
+
+<b>6.	Identify the number of river segments in each ANA.</b><br>
+select a.name, a.aiannhce, count(r.slope)<br>
+from aia_vars a, rivers r<br>
+group by a.name, a.aiannhce, r.slope<br><br>
+
+<b>7.	Find the average slope near rivers for each ANA</b><br>
+select a.aiannhce, a.name, avg(slope)<br>
+from aia_vars a, rivers r<br>
+group by a.name, a.aiannhce, r.slope<br><br>
+
+<b>8.	Identify the areas with the largest LULC change in water, marsh, vegetation, grass/low vegetation, and all classes (run 6 times total)</b><br>
+
+select name, class_name, sum_area as "2006_area", difference, sum_area_1 as "2016_area"<br>
+from lulc<br>
+where class_name = 'Water'<br>
+order by name, Difference<br><br>
+
+<b>9.	Identify ANAs with the biggest change in lulc change difference total in all classes</b><br>
+select name, aiannhce, SUM(Difference)<br>
+from lulc <br>
+group by name, aiannhce<br>
+
+            </div>
+        
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 about-info">
+            <h2>Relocation Analysis</h2>
+
+            <div style="width:100%;height:350px;line-height:1em;overflow:scroll;padding:3px;background-color:#FCFADD;color:#714D03;scrollbar-base-color:rgb(233, 232, 230);">
+                <b>1.	Find all tabblocks within 10 meters of ANA.</b><br>
+
+                select t.geoid, t.name<br>
+                from tabblocks t<br>
+                left join aia_vars a on ST_Dwithin(t.geom, a.geom, 10)<br>
+                order by t.geoid, ST_Distance (t.geom, a.geom)<br><br>
+                
+                <b>2.	Find all tabblocks where river slope is under 2 decimal degrees increase.</b><br>
+                
+                select t.geoid, t.name, avg(r.slope)<br>
+                from tabblocks t, rivers r<br>
+                where slope < 2<br>
+                group by t.geoid, t.name, r.slope	<br><br>
+
+                <b>3.	Find all tabs within 10 m of road</b><br>
+                
+                select t.geoid, t.name, r.gnis_id<br>
+                from tabblocks t<br>
+                left join rivers r on ST_Dwithin(t.geom, r.geom, 10)<br>
+                order by t.geoid, ST_Distance(t.geom, r.geom)<br><br>
+                
+                <b>4.	Find all tabblocks within 1000 meters of an airport.</b><br>
+                
+                select t.geoid, t.name, a.name<br>
+                from tabblocks t<br>
+                left join airports a on ST_Dwithin(t.geom, a.geom, 1000)<br>
+                order by t.geoid, ST_Distance(t.geom, a.geom)<br>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 about-info">
+            <h2>Results and Discussion</h2>
+            <p>The analysis provides insight on the socioeconomic and environmental factors that impact the communities. The study shows that in terms of socioeconomic factors, Scammon Bay displayed the most vulnerability, with 54.2% poverty, 39% school enrollment, 51.7% high school graduates and with 99% of the population carrying health insurance. Additionally, Pilot Station and Hooper Bay showed similar socioeconomic status. Scammon Bay and Hooper Bay are coastal communities, therefore it was important to look at the environmental factors as well. </p>
+            <br>
+            <img src="./vuln_postgis/results1.png" alt="results"><br><br>
+            <p>The environmental factors showed that Hooper Bay, Chevak and Scammon Bay were the most vulnerable to environmental factors, with these areas containing the closest distance to rivers and the highest slope near rivers. It is also important to note that they are all located in the same area of the Wade Hampton Census Tract, therefore provide geographic support for their level of environmental vulnerability. </p>
+            <div class="col-md-7 about-info">
+
+                <img src="./vuln_postgis/results2.png" alt="results2"><br><br>
+            </div>
+            <p>Additionally, the difference in LULC change was assessed to draw a correlation between the results in the socioeconomic and environmental variables. Here you can see the pixel changes between 2006 and 2016 by each land cover class. Overally, Algaaciq and Mountain Village shoed the largest LULC change between 2006 and 2016. This did not provide consistent results with the socioeconomic and environmental variables.</p>
+        </div>
+    </div>    
+    <div class="row">   
+        <div class="col-md-6 about-info">
+            <h2>LULC Change Water</h2>
+                <img src="./vuln_postgis/lulcchange.png" alt="lulc"><br><br>
+        </div>
+        <div class="col-md-6 about-info">
+            <h2>LULC Change Grass</h2>
+                <img src="./vuln_postgis/lulcchange_grass.png" alt="lulcgrass"><br><br>
+        </div>
+    </div>
+    <div class="row">   
+            <div class="col-md-6 about-info">
+                <h2>LULC Change Vegetation</h2>
+                <img src="./vuln_postgis/lulcchange_veg.png" alt="lulcveg"><br><br>
+            </div>
+            <div class="col-md-6 about-info">
+
+                <h2>LULC Change Marsh</h2>
+                <img src="./vuln_postgis/lulcchange_marsh.png" alt="lulcmarsh"><br><br>
+            </div>
+    </div>
+    <div class="row">   
+            <div class="col-md-6 about-info">
+                <h2>LULC Change Dryland</h2>
+                <img src="./vuln_postgis/lulcchange_dryland.png" alt="lulcdryland"><br><br>
+            </div>
+            <div class="col-md-6 about-info">
+                <p>The final tabblock relocation query found all tabblocks within 10 meters of an ANA, with slope under 2 dd, within 10 meters of a road and 10000 meters of an airport. This gave a tabblock universe of 3593 tabblocks. An example heading of the file is shown below. </p>
+                <img src="./vuln_postgis/reloquery.png" alt="reloquery"><br><br>
+            </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 about-info">    
+            <h2>Web App</h2> 
+            <p>A PHP file connects to the PostGIS database tables and fields by enabling the pgsql and pdo_sql extensions in the php.ini file, and then connecting to the PostGIS database through a pg_connect(host, port, dbname, user, pwrd) call. </p>
+            <p>The PHP script calls the PostGIS database with a ST_AsGEOJsON(ST_Transform(geom, 4326)) to convert the data into projected GeoJSON layers, which can be read by Leaflet. On success, each feature in the data table is added to a data array through an onEachFeature() function. The data from the tables are bound to a popup window for each time an ANA is clicked with a Layer.bindPopup(html) function. </p>
+            <p>PHP functionality reads user input, when an AIA is read on the client side ($aia), and then feeds the PostGIS database to return the user needs from the server side. Additional html tags linked with PHP will allow for the user to return tabblocks that fit a desired outcome for relocation suitability, using the following SQL query. An example of the app and the popup information is shown below. </p>
+        </div>
+        <div class="col-md-6 about-info">    
+   
+            <img src="./vuln_postgis/webapp.png" alt="reloquery"><br><br>
+
+        </div>
+    </div>   
+    <div class="row">
+        <div class="col-md-12 about-info">    
+            <h2>Conclusion</h2>  
+            <p>Overall, the coastal communities of Scammon Bay, Hooper Bay and Chevak appeared to be the most consistently impacted by environmental variables. Additionally, Scammon Bay and Hooper Bay both ranked highest for socioeconomic vulnerability. Based on literature review, coastal communities appear most impacted by climate changes, therefore the results are not surprising. The LULC change did not support the results, and therefore, may require reclassification editing to build a more accurate LULC change comparison. The tabblock universe serves as a starting point for identifying tabblocks that might be viable for relocation. Further information should be included into the queries that is supported by literature review. </p>     
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 about-info">    
+            <h2>References</h2>  
+            <p>Bronen, Robin. 2013.“30-Climate-Alaska-Bronen-Paper.Pdf.” Accessed April 20, 2019. https://www.brookings.edu/wp-content/uploads/2016/06/30-climate-alaska-bronen-paper.pdf.<br><br>
+                “American Indian Areas (AIAs) Program for the 2010 Census-Notice of Final Criteria and Guidelines.” 2008. Federal Register. November 14, 2008. https://www.federalregister.gov/documents/2008/11/14/E8-27119/american-indian-areas-aias-program-for-the-2010-census-notice-of-final-criteria-and-guidelines.<br><br>
+                “Census Tracts for the 2020 Census-Final Criteria.” 2018. Federal Register. November 13, 2018. https://www.federalregister.gov/documents/2018/11/13/2018-24567/census-tracts-for-the-2020-census-final-criteria.<br><br>
+                “ISODATA.” n.d. Accessed May 11, 2019. https://www.harrisgeospatial.com/docs/ISODATAClassification.html.            
+               </p>     
+        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+   
+    </main><!-- /.container -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  </body>
+</html>

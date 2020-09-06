@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Iraq Health Infrastructure</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+    <link href="health_infrastructure/iraq_infrastructure.css" rel="stylesheet">
+
+    <style>
+        body { margin:0; padding:0; }
+        #map, #map2 { position:relative; top:0; bottom:0; width:100%; height: 500px }  
+
+/* Do a fancy data transition for browsers that support it */
+        path {
+            -webkit-transition:fill 200ms;
+             transition:fill 200ms;
+  }
+  </style>
+     
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    
+    <div class="container navbar">
+
+      <h1 class="logo">Iraq Health Infrastructure</h1>
+      <div class="menu-icon">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </div>
+      <ul id="menu">
+        <li><a href="../contact.html">Contact</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../index.html">Work</a></li>
+      </ul>
+
+    </div>
+
+    <div class="container about">
+      <div class="row">
+        <div class="col-md-10 about-info">
+          <h2>Iraq Health Infrastructure &nbsp;&bull;&nbsp; 2018 Population and Health Data Analysis</h2>
+  
+          <p>This visualization utilizes data from the 2018 Oxford Poverty and Human Development Initiative (OPHI) to highlight
+            the populated areas of Iraq compared to the most vulnerable health populations. In this context we can see that the most populous areas of Iraq are located in the 
+            n<p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class='col-4 about-info' id='features'><h2>Identifying Vulnerable Populations and Local Health Facilities</h2>
+
+          <div id='pd'><p>Hover over a governorate</p></div>
+      </div>
+
+        <div class="col-md-6" id = "map">
+
+        </div>
+
+        <nav class = "col-md-2 about-info" id="leg"></nav>
+
+    </div>
+
+  <div class="row">
+
+    <div class='col-md-4 about-info' id='features'><h2>Determining Most Health Impacted Areas Based on Percent Population ("Coldspots")</h2>
+      <div id='pd'><p></p></div>
+        <div id='legend' class='legend'>
+          <strong>Hotspots and Coldspots</strong>
+          <div><span style='background:#b2182b;'></span>3</div>
+          <div><span style='background:#ef8a62;'></span>2</div>
+          <div><span style='background:#fddbc7;'></span>1</div>
+          <div><span style='background:#f7f7f7;'></span>Not Significant</div>
+          <div><span style='background:#d1e5f0;'></span>-1</div>
+          <div><span style='background:#67a9cf;'></span>-2</div>
+          <div><span style='background:#2166ac;'></span>-3</div>
+        </div>
+      </div>
+
+    <div class="col-md-6" id = "map2">
+
+    </div>
+    <nav class = "col-md-2 about-info" id="menu2"></nav>
+
+    </div>
+
+  </div>
+
+
+  </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+   
+    </main><!-- /.container -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="health_infrastructure/severepoverty.js"></script>
+    <script src="health_infrastructure/iraq_infrastructure.js"></script>
+  </body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>IRAQ INFRASTRUCTURE</title>
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+
+<style>
+.bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+        }
+    }
+
+</style>
+
+<!--Link to local css file-->
+<link href="iraq_infrastructure.css" rel="stylesheet">
+
+</head>
+
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+	<a class="navbar-brand" href="#">IRAQ | Health Infrastructure and Needs Assessment</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+	</button>
+</nav>
+<main role="main" class="container">
+
+    <div class="starter-template">
+       
+      <h1>USAID IRAQ | Iraq Health Infrastructure and Needs Assessment</h1>
+      <p class="lead">Data provided from the 2018 Oxford Multidimensional Poverty Index and Healthsites IO<br> help us determine if we are programming in the most effective areas of Iraq</p>
+    </div>
+
+<!--bootstrap container split-->
+    <div class = "row" >
+        <!--contain hover interactivity-->
+        <div class='col-4' id='features'><h3>Identifying Vulnerable Populations and Local Health Facilities</h3>
+
+            <div id='pd'><p>Hover over a governorate</p></div>
+        </div>
+        <!--contain map-->
+        <div class = "col-6" id="map"></div>
+        <!--contain legend layers-->
+        <nav class = "col-2" id="menu"></nav>
+    </div>
+</div>
+
+<!--set lend properties for map2-->
+
+
+<div class = "row row-margin-30">
+    <!--contain hover interactivity-->
+    <div class='col-4 about-info' id='features'><h3>Determining Areas Lacking Health Facilities Based on Percent Population ("Coldspots")</h3>
+		<div id='pd'><p>Hover over a governorate</p></div>
+			<div id='legend' class='legend'>
+				<strong>Hotspots and Coldspots</strong>
+				<div><span style='background:#b2182b;'></span>3</div>
+				<div><span style='background:#ef8a62;'></span>2</div>
+				<div><span style='background:#fddbc7;'></span>1</div>
+				<div><span style='background:#f7f7f7;'></span>Not Significant</div>
+				<div><span style='background:#d1e5f0;'></span>-1</div>
+				<div><span style='background:#67a9cf;'></span>-2</div>
+				<div><span style='background:#2166ac;'></span>-3</div>
+			</div>
+    </div>
+    <!--contain map-->
+    <div class = "col-6" id="map2"></div>
+    <!--contain legend layers-->
+    <nav class = "col-2" id="menu2"></nav>
+</div><br><br><br>
+</div>
+<!--link to mapbox js code maps-->
+<script src="iraq_infrastructure.js"></script>
+<script src = 'severepoverty.js'></script>
+</main><!-- /.container -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+</html>

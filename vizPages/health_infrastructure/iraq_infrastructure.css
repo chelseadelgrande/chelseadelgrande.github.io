@@ -1,0 +1,86 @@
+
+#leg, #menu2{
+    background: #fff;
+    position: relative;
+    float: right; 
+    z-index: 1;
+    border-radius: 3px;
+    width: 120px;
+    font-size:12;
+    font-family: "Segoe UI";
+}
+ 
+#leg a, #menu2 a {
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #404040;
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 15px;
+    border-color:none;
+    text-align: center;
+}
+ 
+#leg a:last-child, #menu2 a:last-child {
+    border: none;
+}
+ 
+#leg a:hover, #menu2 a:hover{
+    background-color: #f8f8f8;
+}
+ 
+#leg a.active, #menu2 a.active {
+    background-color: #222;
+    color: #ffffff;
+    border-color: none;
+}
+ 
+#leg a.active:hover, #menu2 a.active:hover{
+background: rgb(41, 41, 41);
+}
+#features {
+position:relative;
+overflow: auto;
+
+}
+#pd {
+position: relative;
+
+overflow:auto;
+}
+
+/*h3{
+    text-align:left;
+    color:#8C8985;
+}*/
+
+strong{
+    color: #222;
+    font-weight: 500;
+    font-size: 1.25em;
+    text-transform: uppercase;
+}
+
+.legend {
+    bottom: 30px;
+    font-family: 'Open Sans', sans-serif;
+    padding: 10px;
+    position: relative;
+    right: 10px;
+    z-index: 1;
+    }
+     
+    /*.legend h4 {
+    margin: 0 0 10px;
+    }*/
+     
+    .legend div span {
+    border-radius: 50% !important;
+    display: inline-block;
+    height: 10px;
+    margin-right: 5px;
+    width: 10px;
+    }

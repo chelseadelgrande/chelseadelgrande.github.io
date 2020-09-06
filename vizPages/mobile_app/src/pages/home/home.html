@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>CAMP AROUND</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <img src= "../assets/imgs/camping.png"/>
+    <ion-card-content><p>
+      Camping doesn't have to be expensive. <br><br>With Camp Around's rentals, you can rent gear
+      near any certified camp location. Opt to pick up or set delivery to the campsite when you
+      plan to arrive. <br><br>We want your camping trip to be memorable for the right reasons --
+      not for the cost of it!</p>
+    </ion-card-content>
+   
+  </ion-card>
+  
+  <ion-card>
+      <ion-card-title>
+        <h1>HOW IT WORKS...</h1>
+      </ion-card-title>
+      <img src= "./assets/imgs/gear.jpg"/>
+      <ion-card-content>
+          <h2>1. Select Gear For Your Trip. </h2><br><p>What are you missing, and how can we help? Select from our marketplace of items
+          to make sure you are not breaking the bank on your next minimalist getaway. </p>
+      </ion-card-content>
+  </ion-card>
+  <ion-card >
+      <ion-fab right>
+          <button ion-fab (click) ="goToMapPage(camp.searchType)">
+            <ion-icon  name="pin"></ion-icon>
+          </button>    
+        </ion-fab>
+    <img src = "./assets/imgs/map.jpg"/>
+
+   
+    <ion-card-content>
+         <h2> 2. Select Meet Up Location.</h2> <br><p>Don't worrry, we'll deliver to you! Let us know what park you plan
+          to camp at, and we'll have someone there to meet you. <br><br></p>
+        </ion-card-content>
+      </ion-card>
+    <ion-card >
+        <ion-card-content>
+          <img src = "../assets/imgs/time.jpg">
+        <h2>3. Select Time & Date. </h2> <br><p>Give us the details! We want to be on time.</p>
+      
+      </ion-card-content>
+     
+    </ion-card>
+  </ion-content>

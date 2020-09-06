@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Health Facility Isochrones Per City</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+<style>
+	body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+    #features {
+    background: rgba(19, 19, 19, 0.8);
+    position:relative;
+    bottom: 0;
+    overflow: auto;
+    border-radius: 15px;
+    padding-left: 15px;	
+    margin-left: 4px;
+    width: 30%;
+    font-family: 'Montserrat', sans-serif;
+    color: whitesmoke
+}
+.legend {
+    bottom: 30px;
+    font-family: 'Montserrat', sans-serif;
+    padding: 10px;
+    position: relative;
+    right: 10px;
+    z-index: 1;
+    
+    }
+     
+    .legend h4 {
+    margin: 0 0 10px;
+    }
+     
+    .legend div span {
+    border-radius: 50%;
+    display: inline-block;
+    height: 10px;
+    margin-right: 5px;
+    width: 10px;
+    }	
+
+
+</style>
+</head>
+<body>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css" type="text/css"/>
+<script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
+
+<div id="map"></div>
+
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlbHNlYWRlbGdyYW5kZSIsImEiOiJjazh4aWR3YWsxN3Y1M2dtaDE2YmdydXZ2In0.pwijKELZM0lRR6FzE90T8A';
+  const transformRequest = (url) => {
+    const hasQuery = url.indexOf("?") !== -1;
+    const suffix = hasQuery ? "&pluginName=lunchboxIsochrones" : "?pluginName=lunchboxIsochrones";
+    return {
+      url: url + suffix
+    }
+  }
+  
+  const isoUrl = "https://api.mapbox.com/isochrone/v1/mapbox";
+  const profile = "driving";
+  const minutes = "60";
+  var maskExtent = turf.polygon(
+    [
+          [
+            [
+              44.67041015625,
+              37.17782559332976
+            ],
+            [
+              44.2529296875,
+              36.96744946416934
+            ],
+            [
+              44.14306640625,
+              37.125286284966805
+            ],
+            [
+              44.29687499999999,
+              37.23032838760387
+            ],
+            [
+              44.05517578124999,
+              37.35269280367274
+            ],
+            [
+              43.83544921875,
+              37.24782120155428
+            ],
+            [
+              43.35205078125,
+              37.28279464911045
+            ],
+            [
+              43.1103515625,
+              37.38761749978395
+            ],
+            [
+              42.9345703125,
+              37.35269280367274
+            ],
+            [
+              42.7587890625,
+              37.38761749978395
+            ],
+            [
+              42.626953125,
+              37.10776507118514
+            ],
+            [
+              42.29736328125,
+              37.00255267215955
+            ],
+            [
+              41.81396484375,
+              36.474306755095235
+            ],
+            [
+              41.46240234375,
+              36.491973470593685
+            ],
+            [
+              41.30859375,
+              36.10237644873644
+            ],
+            [
+              41.4404296875,
+              35.67514743608467
+            ],
+            [
+              41.2646484375,
+              35.33529320309328
+            ],
+            [
+              41.1767578125,
+              34.72355492704221
+            ],
+            [
+              40.95703125,
+              34.397844946449865
+            ],
+            [
+              40.341796875,
+              34.21634468843463
+            ],
+            [
+              38.7158203125,
+              33.358061612778876
+            ],
+            [
+              39.0673828125,
+              32.41706632846282
+            ],
+            [
+              39.26513671875,
+              32.1570124860701
+            ],
+            [
+              40.3857421875,
+              31.93351676190369
+            ],
+            [
+              42.01171875,
+              31.147006308556566
+            ],
+            [
+              43.35205078125,
+              30.221101852485987
+            ],
+            [
+              44.736328125,
+              29.209713225868185
+            ],
+            [
+              46.29638671874999,
+              29.132970130878636
+            ],
+            [
+              46.56005859375,
+              29.11377539511439
+            ],
+            [
+              46.9775390625,
+              29.7453016622136
+            ],
+            [
+              47.2412109375,
+              30.088107753367257
+            ],
+            [
+              48.076171875,
+              30.088107753367257
+            ],
+            [
+              48.427734375,
+              29.954934549656144
+            ],
+            [
+              48.427734375,
+              30.221101852485987
+            ],
+            [
+              48.1201171875,
+              30.4297295750316
+            ],
+            [
+              47.9443359375,
+              30.996445897426373
+            ],
+            [
+              47.65869140625,
+              30.996445897426373
+            ],
+            [
+              47.65869140625,
+              31.522361470421437
+            ],
+            [
+              47.8125,
+              31.82156451492074
+            ],
+            [
+              47.61474609375,
+              32.08257455954592
+            ],
+            [
+              47.48291015625,
+              32.1570124860701
+            ],
+            [
+              47.48291015625,
+              32.26855544621476
+            ],
+            [
+              47.3291015625,
+              32.491230287947594
+            ],
+            [
+              47.109375,
+              32.509761735919426
+            ],
+            [
+              46.318359375,
+              33.04550781490999
+            ],
+            [
+              45.966796875,
+              33.02708758002874
+            ],
+            [
+              46.16455078125,
+              33.247875947924385
+            ],
+            [
+              45.9228515625,
+              33.486435450999885
+            ],
+            [
+              45.3955078125,
+              33.99802726234877
+            ],
+            [
+              45.4833984375,
+              34.23451236236987
+            ],
+            [
+              45.439453125,
+              34.470335121217474
+            ],
+            [
+              45.52734375,
+              34.59704151614417
+            ],
+            [
+              45.68115234375,
+              34.56085936708384
+            ],
+            [
+              45.6591796875,
+              34.79576153473033
+            ],
+            [
+              45.85693359375,
+              35.0120020431607
+            ],
+            [
+              46.142578125,
+              35.209721645221386
+            ],
+            [
+              46.0107421875,
+              35.60371874069731
+            ],
+            [
+              46.2744140625,
+              35.817813158696616
+            ],
+            [
+              46.142578125,
+              35.871246850027966
+            ],
+            [
+              45.74707031249999,
+              35.88905007936091
+            ],
+            [
+              45.4833984375,
+              36.01356058518153
+            ],
+            [
+              45.37353515625,
+              36.01356058518153
+            ],
+            [
+              45.3076171875,
+              36.20882309283712
+            ],
+            [
+              45.19775390625,
+              36.43896124085945
+            ],
+            [
+              45,
+              36.527294814546245
+            ],
+            [
+              45.08789062499999,
+              36.66841891894786
+            ],
+            [
+              44.9560546875,
+              36.77409249464195
+            ],
+            [
+              44.82421875,
+              36.79169061907076
+            ],
+            [
+              44.8681640625,
+              37.020098201368114
+            ],
+            [
+              44.67041015625,
+              37.17782559332976
+            ]
+          ]
+        ]
+);
+  const pointsUrl = "https://raw.githubusercontent.com/chelseadelgrande/Iraq_healthsites/master/Iraq_healthsites_points.geojson";
+  let points = {};
+  
+  const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/chelseadelgrande/ckablwlyo0u511io7ovywvv6m',
+      center: [43.127007,36.346605],
+      zoom: 10,
+      transformRequest: transformRequest
+  });
+
+  const geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl
+  });
+
+  map.addControl(geocoder, "top-right");
+  
+  //create point grid across iraq to iterate through coordinates
+   // var data = JSON.parse(maskExtent)  
+    var extent = [38.7, 28.746894, 49.527996, 37.5]
+    var cellSide = 24.2;
+    var options = {units: 'miles', mask: maskExtent}
+
+    var grid = turf.pointGrid(extent, cellSide, options);
+    console.log(grid);
+    var features = [];
+    features = grid.features;
+
+   // console.log(features);
+ const getIso = function() {
+    // Concatenate the request
+
+    /*for (let x of Object.keys(grid.features.geometry.coordinates)){
+        var xy = grid.features.geometry.coordinates[x];
+        console.log(x, xy);
+    }
+    for (const [x, xy] of Object.entries(grid.features.geometry.coordinates))
+    console.log(x, xy);*/
+    //for (let [index, coordpair] of features.entries()){
+    var jproperties = grid.features.map(function(el){
+    return el.properties;
+    });
+    for (var i = 0; i < jproperties.length; i++){
+        var obj= jproperties[i];
+        console.log()
+    let request = `${isoUrl}/${profile}/${obj}.json?contours_minutes=${minutes}&polygons=true&access_token=${mapboxgl.accessToken}`;
+ 
+ //  console.log(coordpair[0-5])
+   console.log(request);
+    // Make the request, then do the things
+    
+    fetch(request).then(res => res.json()).then(res => {
+      console.log(res);
+      map.getSource("iso").setData(res);     
+      //const selected = turf.pointsWithinPolygon(points, res);
+      //map.getSource("selection").setData(selected);
+      /*
+      const selectionCount = selected.features.length;
+      console.log(`Number of points within ${minutes} minutes ${profile} of ${coords}: ${selectionCount}`);
+      document.getElementById("htmlpoints").innerHTML = `Number of health facilities within ${minutes} minutes ${profile} from ${coords}: ${selectionCount}`;
+      const area = turf.area(res)
+      const area_trim = area.toFixed(2)
+      console.log(`Area in square meters: ${area}m2`)
+      document.getElementById("htmlarea").innerHTML = `Area in square meters that can be reached within 15 minutes: ${area_trim} m2`;
+    */
+   // });
+    
+  });
+ };
+ }
+  map.on("load", () => {
+    // Add source and layer for the isochrone
+    map.addSource("grid", {
+      type: "geojson",
+      data: grid
+    });
+    map.addSource("iso",{
+      type: "geojson",
+      data: "iso"
+    })
+
+    map.addLayer({
+      "id": "pointGrid",
+      "type": "circle",
+      "source": "grid",
+      "layout": {},
+      "paint": {
+        "circle-color": "purple",
+        "circle-opacity": 0.3
+      }
+    }, "poi-label");
+
+    // Add source and layer for the point data
+    map.addSource("points", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [
+        ]
+      }
+    });
+
+    map.addLayer({
+      "id": "pointsLayer",
+      "type": "circle",
+      "source": "points",
+      "layout": {},
+      "paint": {
+        "circle-color": "#4da6ff",
+      }
+    }, "poi-label");
+
+    // Add source and layer for the selected point data
+    map.addSource("selection", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [
+        ]
+      }
+    });
+
+    map.addLayer({
+      "id": "selectionLayer",
+      "type": "circle",
+      "source": "selection",
+      "layout": {},
+      "paint": {
+        "circle-color": "purple",
+      }
+    });
+
+    // Do this when the geocoder returns a result
+    geocoder.on("result", ev => {
+      coords = ev.result.geometry.coordinates.join(" , ")
+      console.log(coords);
+      getIso();
+    });
+
+    // Fetch the point geojson and set it to a map layer source
+    fetch(pointsUrl).then(res => res.json()).then(res => {
+      points = res;
+      map.getSource("points").setData(points);
+    });
+
+    getIso();
+
+  });
+  map.on('click', 'pointsLayer', function(e) {
+var coordinates = e.features[0].geometry.coordinates.slice();
+var description = e.features[0].properties.amenity;
+ 
+// Ensure that if the map is zoomed out such that multiple
+// copies of the feature are visible, the popup appears
+// over the copy being pointed to.
+while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+}
+ 
+new mapboxgl.Popup()
+.setLngLat(coordinates)
+.setHTML(description)
+.addTo(map);
+});
+ 
+// Change the cursor to a pointer when the mouse is over the places layer.
+map.on('mouseenter', 'pointsLayer', function() {
+map.getCanvas().style.cursor = 'pointer';
+});
+ 
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'pointsLayer', function() {
+map.getCanvas().style.cursor = '';
+});
+map.addControl(new mapboxgl.NavigationControl());
+
+</script>
+<div class='col-4' id='features'><h3>Iraq Health Facilities within 15 Minutes Driving from Location Entered in Search</h3><br>
+        <div id='legend' class='legend'>
+            <div><span style='background:#4da6ff;'></span>Health Facilities</div>
+            <div><span style='background:purple;'></span>Health Facilities within 15 minutes from location</div><br>
+            <div id='htmlpoints'></div><br>
+            <div id='htmlarea'></div>  
+        </div>
+</div>
+</body>
+</html>

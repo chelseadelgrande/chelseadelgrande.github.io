@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Directional Distribution</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+<style>
+	body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+    #features {
+    background: rgba(19, 19, 19, 0.8);
+    position:relative;
+    bottom: 0;
+    overflow: auto;
+    border-radius: 15px;
+    padding-left: 15px;	
+    margin-left: 4px;
+    width: 30%;
+    font-family: 'Montserrat', sans-serif;
+    color: whitesmoke
+}
+.legend {
+    bottom: 30px;
+    font-family: 'Montserrat', sans-serif;
+    padding: 10px;
+    position: relative;
+    right: 10px;
+    z-index: 1;
+    
+    }
+     
+    .legend h4 {
+    margin: 0 0 10px;
+    }
+     
+    .legend div span {
+    border-radius: 50%;
+    display: inline-block;
+    height: 10px;
+    margin-right: 5px;
+    width: 10px;
+    }	
+</style>
+</head>
+<body>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css" type="text/css"/>
+<script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
+
+<div id="map"></div>
+
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlbHNlYWRlbGdyYW5kZSIsImEiOiJjazh4aWR3YWsxN3Y1M2dtaDE2YmdydXZ2In0.pwijKELZM0lRR6FzE90T8A';
+
+  const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/chelseadelgrande/ckablwlyo0u511io7ovywvv6m',
+      center: [43.127007,36.346605],
+      zoom: 7,
+  });
+/*
+  const translateToFeatureJson = (data) => {
+  return data.map(event => {
+    return {
+      geometry: {
+        x: parseFloat(event.longitude),
+        y: parseFloat(event.latitude)
+      },
+      attributes: {
+        data_id: parseInt(event.data_id),
+        iso: event.iso,
+        event_id_cnty: event.event_id_cnty,
+        event_id_no_cnty: event.event_id_no_cnty,
+        event_date: moment(event.event_date).format('YYYY-MM-DD'),
+        year: parseInt(event.year),
+        time_precision: event.time_precision,
+        event_type: event.event_type,
+        actor1: event.actor1,
+        assoc_actor_1: event.assoc_actor_1,
+        inter1: event.inter1,
+        actor2: event.actor2,
+        assoc_actor_2: event.assoc_actor_2,
+        inter2: event.inter2,
+        interaction: event.interaction,
+        region: event.region,
+        country: event.country,
+        admin1: event.admin1,
+        admin2: event.admin2,
+        admin3: event.admin3,
+        location: event.location,
+        latitude: parseFloat(event.latitude),
+        longitude: parseFloat(event.longitude),
+        geo_precision: event.geo_precision,
+        source: event.source,
+        source_scale: event.source_scale,
+        notes: event.notes,
+        fatalities: parseInt(event.fatalities),
+        timestamp: event.timestamp,
+        iso3: event.iso3
+      }
+    };
+  });
+};
+
+const getLiveAcledData = () => {
+    const apiUrl = `https://api.acleddata.com/acled/read?event_date=${fourteenDaysAgo}&event_date_where=%3E=&limit=0`;
+    console.log('requesting data from ACLED API ..');
+    console.log(`ACLED API request URL :: ${apiUrl}`);
+
+    return fetch(apiUrl)
+    .then(response => response.json())
+    .then(responseData => {
+      if (!responseData) {
+        throw new Error('no response data returned from ACLED API');
+      } else if (responseData.count === 0 || responseData.data.length === 0) {
+        throw new Error('no features from ACLED API returned. exiting ..');
+      } else {
+        _ACLEDDATA = translateToFeatureJson(responseData.data);
+        return Promise.resolve();
+      }
+    });
+};
+*/
+  const geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl
+  });
+
+  map.addControl(geocoder, "top-right");
+  const points = 'https://raw.githubusercontent.com/chelseadelgrande/ACLEDIraq/master/2019_FC'
+
+    const bbox = [35.050399, 41.655835, 34.073304, 43.237867];
+    const ppoints = turf.randomPoint(400, {bbox: bbox});
+    const options = {steps: '150'};
+    const sdEllipse = turf.standardDeviationalEllipse(points, options);
+    console.log(sdEllipse);
+    console.log(points)
+
+  
+  map.on('load', function() {
+    map.addSource("testline", {
+      type: "geojson",
+      data: sdEllipse
+    });
+
+    map.addLayer({
+        'id': "testline",
+        'type':"fill",
+        "source": "testline",
+        'paint':{
+            'fill-color': "pink",
+        }
+    })
+    map.addSource("testpoint", {
+      type: "geojson",
+      data: ppoints
+    });
+    map.addLayer({
+        'id': "testpoint",
+        'type':"circle",
+        "source": "testpoint",
+        'paint':{
+            'circle-color': "white",
+            'circle-radius':5
+        }
+    })
+    // Add source and layer
+    map.addSource("conflict2016", {
+      type: "geojson",
+      data: points
+    });
+    map.addLayer({
+      'id': "Conflict Events 2016",
+      'type': "circle",
+      'source': "conflict2016",
+      'paint': {
+        "circle-color": "purple",
+        'circle-radius': 4
+      }
+    });
+
+});
+
+
+var addToMap = [ppoints, sdEllipse];
+/*
+// Change the cursor to a pointer when the mouse is over the places layer.
+map.on('mouseenter', 'Conflict Events 2016', function() {
+map.getCanvas().style.cursor = 'pointer';
+});
+ 
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'Conflict Events 2016', function() {
+map.getCanvas().style.cursor = '';
+});
+map.addControl(new mapboxgl.NavigationControl());*/
+
+</script>
+<div class='col-4' id='features'><h3>Iraq Conflict Events Over Time | Directional Distribution</h3><br>
+        <div id='legend' class='legend'>
+            <div><span style='background:#4da6ff;'></span>Health Facilities</div>
+            <div><span style='background:purple;'></span>Health Facilities within 15 minutes from location</div><br>
+            <div id='htmlpoints'></div><br>
+            <div id='htmlarea'></div>  
+        </div>
+</div>
+</body>
+</html>

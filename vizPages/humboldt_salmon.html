@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Chelsea Del Grande | Vizfolio</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+
+    <style>
+        body { margin:0; padding:0; }
+        #map, #map2 { position:relative; top:0; bottom:0; width:100%; }  
+
+        select, option{
+            font-family: 'Open Sans', sans-serif;
+            color: white !important;
+            position: relative;
+            width: 100%;
+            word-wrap: normal;
+            font-size:13px;
+            background-color: rgb(59, 59, 59);
+            border-color: rgb(59, 59, 59);
+            border: .5px;
+            padding: 8px;
+        }
+        select:hover, option:hover, #variables[i]{
+            background-color: #555;
+            color: white;
+        }
+
+        .legend label, .legend span {
+            display:block;
+            float:left;
+            height:15px;
+            width:20%;
+            text-align:center;
+            font-size:9px;
+            color:#808080;
+  }
+        .list-group {
+            text-align:left;
+        }
+/* Do a fancy data transition for browsers that support it */
+        path {
+            -webkit-transition:fill 200ms;
+             transition:fill 200ms;
+  }
+  </style>
+
+    <!-- jQuery is required for this example. -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+
+    <div class="container navbar">
+
+      <h1 class="logo">Chelsea Del Grande | Vizfolio</h1>
+      <div class="menu-icon">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </div>
+      <ul id="menu">
+        <li><a href="../contact.html">Contact</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../index.html">Work</a></li>
+      </ul>
+
+    </div>
+
+    <div class="container about">
+        <div class="row">
+            <div class="col-md-6 about-info">
+              <h1>A Study on Chinook Salmon in Humboldt, Trinity, Del Norte and Siskiyou Counties, CA &nbsp;&bull;&nbsp; Impacts of Elevation and Land Cover on Abundance, and Determining a Suitable Management Area</h1>
+    
+                <p>West Coast Chinook Salmon stocks have declined substantially in recent years due to a myriad of impacts on their habitat; this study analyzed existing abundance data between 1992 and 2005 in attempts to draw connectivity between elevation and land cover type with stock abundance decline trends in four northern California counties: Humoldt, Trinity, Del Norte and Siskiyou. The conclusion of the initial analysis helps determine the best location for a conservation area within the region.  </p>
+            </div>    
+
+            <div class="col-md-6 about-info">
+                <img src="./humboldt_salmon/studyarea.png" alt="study1">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 about-info">
+                <p>Chinook Salmon are native to northern California and play a large role in the local ecosystem, but are currently facing declining population trends due to a multitude of impacts to their habitat: loss of stream habitat due to watershed disturbances, interactions with hatchery fish, overexploitation and climactic factors (Brown 251). While there are multiple factors that are known to contribute to the decline of Chinook salmon population, this analysis focused on the main disturbance factors local to Humboldt, Trinity, Del Norte and Siskiyou counties: loss of stream habitat due to watershed disturbances associated with urbanization, logging, and mining. Increasing land development, and continued logging operations create excess sediment from soil erosion and logging roads in steep sloped areas, which impact gravel permeability and increase sediment into watersheds (Brown 252). The excess sediment seeps into streams and traps salmonid and their eggs by reducing intragravel flow and dissolved oxygen. Therefore, both elevation and land cover are known to be determining factors that impact the longevity of salmon populations in the region.</p>
+                <p>One of the major limiting factors for assessing the salmonid decline in northern California is the lack of recorded historic data for the region’s population. A majority population estimates in northern California are a range of population estimates, and expanded redd estimates beginning in 2010 (NOAA Fisheries, 12). Due to a short time duration, these estimates fall short of creating a conclusive connectivity between causation and distribution trend decline. This analysis used existing fish abundance data that was recorded between 1992 and 2005 in a new attempt to show the status of the Chinook salmonid abundance, and draw a possible correlation between elevation and specific land cover type with population status. </p>
+                <p>The objective of this project is to identify strong correlations between elevation and a specific land cover type (urban, agriculture, barren or natural) with Chinook fish abundance in Humboldt, Trinity, Del Norte and Siskiyou counties in Norhtern California between 1992 and 2005. The initial results will furhter inform the placement of a proposed monitoring and conservation area to preserve areas along streambanks that are most affected by land cover and elevation</p>
+          </div>
+        </div>
+     
+      <div class="row">
+        <div class="col-md-7 about-info">
+            <h1>Data and Collection</h1>
+
+            <p>
+                <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">Dataset</th>
+                        <th scope="col">Source</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Chinook Abundance</th>
+                        <td><a href="http://www.calfish.org/DataandMaps/CalFishDataExplorer.aspx ">CalFish Abundance Database </a></td>
+                        <td>2015</td>
+                        <td>Shapefile - Linear</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Humboldt County Boundary  </th>
+                        <td><a href = "https://humboldtgov.org/"> Humboldt, County, CA GIS Data Download </a></td>
+                        <td>2018</td>
+                        <td>Shapefile - Polygon</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">National Land Cover Database (NLCD)  </th>
+                        <td><a href = "https://datagateway.nrcs.usda.gov/GDGOrder.aspx ">USDA Natural Resources Conservation Service</a> </td>
+                        <td>1992, 2001, 2006, 2011</td>
+                        <td>Raster</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">National Elevation Dataset 30 meter (DEM)  </th>
+                        <td><a href = "https://datagateway.nrcs.usda.gov/GDGOrder.aspx ">USDA Natural Resources Conservation Service </a></td>
+                        <td>2015</td>
+                        <td>Raster</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+        </div>
+        <div class="col-md-5 about-info">
+            <h2>Digital Elevation Model (DEM)</h2>
+            <img src="./humboldt_salmon/DEM.png" alt="DEM">
+        </div>
+    </div>
+        <div class="row">
+            <div class="col-md-7 about-info">
+                <h1>Methodology</h1>
+            <br><br><br>
+         
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><b>1. Prepare elevation datasets: </b> I merged and clipped DEM files to county boundaries, then found the slope and created a buffer 100 meters around Chinook abundance. I used 100 meters because this is the generally accepted distance from streams that is known to impact acquatic wildlife. I then found the “Zonal Statistics” for Chinook abundance buffer zones between  1992 - 2000, and 2001 - 2005 to identify the mean  of cells in the DEM that correlate with the buffer zones of Chinook abundance.</li>
+                    <li class="list-group-item"><b>2. Prepare NLCD 1992 and NLCD 2001 datasets:</b> I clipped NLCD 1992 and NLCD 2001 to county boundaries, then reclassified land cover into four categories: 1. Urban 2. Barren 3. Natural 4. Agriculture. Note: “NoData” is not included in the analysis; “Open Water “and “Perennial Ice” are classified as “NoData” as this project focuses on land surface. I created a 100 meter buffer around Chinook abundance on reclassified NLCD 1992 and NLCD 2001 then used “Tabulate Area” to find the percentage of land cover type within each cell of the 100 meter buffer for NLCD 1992 and NLCD 2001.</li>
+                    <li class="list-group-item"><b>3. Prepare Chinook abundance datasets:</b> I clipped Chinook abundance to county boundaries then selected data within 1992 and 2005.  I split the data into two sections: 1992 - 2000 and 2001 - 2005. For this project we assume that NLCD does not change until a new map is provided; therefore 1992 - 2000 abundance was matched with 1992 NLCD, and 2001 - 2005 abundance was matched with 2001 NLCD.  </li>
+                    <li class="list-group-item"><b>4. Create a linear regression based on data:</b> I identified the percent interaction between elevation and land cover type based on cell ID, and matched this with the mean Chinook abundance cell ID. I plotted the linear regression between mean Chinook abundance and percent interaction between elevation and land cover type to identify the connectivity between fish abundance, elevation and land cover type.  </li>
+                    <li class="list-group-item"><b>5. Propose a monitoring and conservation site based on results:</b> Based on my initial analysis, I used zonal statistics to help define the area in the four counties with the steepest slope within a 100 meter distance from a stream with known Chinook abundance. </li>
+
+                  </ul>
+                  </ul>
+            </div>
+            <div class="col-md-5 about-info">
+                <h2>1992 NCLD </h2>
+                <img src="./humboldt_salmon/1992nlcd.png" alt="1992"><br><br><br>
+                <h2>2001 NCLD </h2>
+                <img src="./humboldt_salmon/2001nlcd.png" alt="2001">               
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 about-info">
+                <h1>Results and Discussion</h1>
+                <p><b>Regression Statistics | Impacts of Urban Land Cover<br>	
+                    Multiple R:	0.262546921<br>
+                    Adjusted R Square: 0.042826144<br>
+                    Standard Error: 997.9039672<br>
+                    Coefficients (X): -127.22	<br>
+                    Standard Error (X): 266.0184<br>
+                    P-value (X): 0.633</b>
+            </div>
+
+            <div class="col-md-6 about-info">
+                <h2>Linear Regression | Impacts of Urban Land Cover</h2>
+                    <img src= "./humboldt_salmon/fig5.png" alt="fig5">
+            </div>
+        </div>
+        <div class = "row">
+                <div class="col-md-12 about-info">
+                    <p>Fig 5 shows that there is little confidence that urban land cover and elevation interaction has an impact on Chinook abundance. The Multiple R shows that the linear correlation is not strong at .263, and the Adjusted R Square shows that only 4% of Chinook values are explained by elevation and urban land cover.  Additionally, the coefficient shows that the higher the Chinook abundance, the lower the elevation and urban land cover interaction. Additionally, the high P-value shows that this model can not confirm that elevation and land cover have an impact on Chinook abundance in this model.</p>
+                </div>
+        </div>
+        <div class= "row">
+            <div class="col-md-6 about-info"><br><br><br>
+                <p><b>Regression Statistics | Impacts of Elevation<br>	
+                    Multiple R:	0.271615119<br>
+                    Adjusted R Square: 0.047805842<br>
+                    Standard Error: 995.3047842<br>
+                    Coefficients (X): 207.6548104	<br>
+                    Standard Error (X): 271.979353<br>
+                    P-value (X): 0.446848566</b>
+            </div>
+
+            <div class="col-md-6 about-info">
+                <h2>Linear Regression | Impacts of Elevation</h2>
+                    <img src= "./humboldt_salmon/fig6.png" alt="fig6">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 about-info">
+                <p>Fig 6 and the coefficient statistics show that this model claims higher fish abundance is associated with higher elevation and barren land interaction. This model also shows that there is very low confidence that elevation and barren land cover interaction have an impact on Chinook abundance. The low Multiple R and Adjusted R Square show that there is not a strong correlation between these factors and Chinook abundance, and only 4.7% of the Chinook abundance can be explained by the elevation and barren land cover interaction. Additionally, the high P-value confirms that we have little confidence that elevation and barren land cover impact Chinook abudance in this model. </p>
+            </div>
+        </div>
+
+        <div class= "row">
+            <div class="col-md-6 about-info"><br><br><br>
+                <p><b>Regression Statistics | Impacts of Elevation and Agriculture Land Cover<br>	
+                    Multiple R:	0.631401376<br>
+                    Adjusted R Square: 0.381807913<br>
+                    Standard Error: 801.9643374<br>
+                    Coefficients (X): 3249.343288	<br>
+                    Standard Error (X): 551.3716479<br>
+                    P-value (X): 4.45604E-08</b>			
+            </div>
+
+            <div class="col-md-6 about-info">
+                <h2>Linear Regression | Impacts of Elevation and Agriculture Land Cover</h2>
+                    <img src= "./humboldt_salmon/fig7.png" alt="fig6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 about-info">
+                <p>Fig 7 and the related coefficient shows higher fish abundance is related to higher elevation and agriculture land cover interaction. This claim can be easily disputed as the Multiple R statistic is relatively low at .63, and that only 38% of Chinook values are explained by elevation and agriculture land cover. The P-value, 4.456, is the most noteable statistic in this model, and shows that this model is random and can not confirm that elevation and agriculture land cover has an impact on Chinook abundance.  </p>
+            </div>
+        </div>
+
+        <div class= "row">
+            <div class="col-md-6 about-info"><br><br><br>
+                <p><b>Regression Statistics | Impacts of Elevation and Natural Land Cover<br>	
+                    Multiple R:	0.262580417<br>
+                    Adjusted R Square: 0.042844227<br>
+                    Standard Error: 997.8945409<br>
+                    Coefficients (X): -11.2221994		<br>
+                    Standard Error (X): 151.3853007<br>
+                    P-value (X): 0.941045315</b>			
+            </div>				
+
+            <div class="col-md-6 about-info">
+                <h2>Linear Regression | Impacts of Elevation and Natural Land Cover</h2>
+                    <img src= "./humboldt_salmon/fig8.png" alt="fig6">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 about-info">
+                <p>Fig 8 results claim that higher fish counts reside in less natural areas. The Multiple R statistic shows that there is not a strong linear correlation,a nd the Adjusted R Square shows that only 4% of Chinook values are explained by elevation and natural land cover. The P-value indicates that there is nearly a random connection between abundance, elevation and natural land cover. Therefore, we have very low confidence that fish population is affected by land cover in this scenario. </p>
+            </div>
+        </div>
+
+        <div class= "row">
+            <div class="col-md-6 about-info"><br><br><br>
+                <p><b>Regression Statistics | Impacts of Natural Land Cover<br>	
+                    Multiple R:	0.182809257<br>
+                    Adjusted R Square: 0.024551511<br>
+                    Standard Error: 1007.385059<br>
+                    Coefficients (X):-1744.704435		<br>
+                    Standard Error (X): 898.7305577<br>
+                    P-value (X): 0.054803764</b>			
+            </div>				
+
+            <div class="col-md-6 about-info">
+                <h2>Linear Regression | Impacts of Natural Land Cover</h2>
+                    <img src= "./humboldt_salmon/fig9.png" alt="fig6">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 about-info">
+                <p>I was surprised by the results above, specifically Fig. 8, so I decided to break up my variables to better understand the data and results. Fig 9 shows the connection between only natural land cover and Chinook abundance, and omits slope in the equation. The plot reveals that even though there is a positive trend between fish population and natural land cover, the high amount of 0 counts skews the data and brings the trendline down. This highlights the need for a more powerful model that weighs 0 counts appropriately for this scenario.</p>
+            </div>
+        </div>
+
+        <div class= "row">
+            <div class="col-md-6 about-info"><br><br><br>
+                <p><b>Regression Statistics | Impacts of Elevation<br>	
+                    Multiple R:	0.257161797<br>
+                    Adjusted R Square: 0.057564595<br>
+                    Standard Error: 990.1913581<br>
+                    Coefficients (X): -43.88987049		<br>
+                    Standard Error (X): 15.79746133<br>
+                    P-value (X): 0.006436369</b>			
+            </div>								
+            <div class="col-md-6 about-info">
+                <h2>Linear Regression | Impacts of Natural Land Cover</h2>
+                    <img src= "./humboldt_salmon/fig10.png" alt="fig10">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 about-info">
+                <p>Fig 10 shows the connection between only elevation and Chinoook abundance, and removes land cover as a factor. The results show that higher fish counts reside in areas with lower elevation. Additionally, the very low P-value shows that we have high confidence that slope affects Chinook abundance in this scenario. While this was an expected outcome, it only explains one variable to understanding Chinook abundance. This model does not tell us why elevation has an impact on Chinook abundance.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 about-info">
+                <h1>Proposed Management Area</h1>
+                <p>Based on my results that highlight slope as an influencing factor in declining Chinook abundance, I propose creating a management area along the North Fork Dillon Creek tributary (Fig 11). The 100 meter buffer area around North Fork Dillon Creek contains the steepest slope  out of all streams in Humboldt, Trinity, Del Norte and Siskiyou. The slope in this area ranges from 39.932m - 71.2896m,  where the mean slope for the four counties is 17.557 m, with a standard deviation of 10.98 m. </p>
+                <p>Therefore, I propose monitoring Chinook abundance in this area yearly at consistent time of year, with similar techniques and duration. This area should be conserved in an effort to limit the decline of Chinook as it is most vulnerable to watershed disruption due to erosion and increased sediment on a steep slope. </p>
+            </div>
+
+            <div class="col-md-6 about-info">
+                <img src= "./humboldt_salmon/conservationarea.png" alt="cons">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 about-info">
+                <h1>Conclusion</h1>
+                <p>The linear regression results were surprising, and did not draw conclusive connectivity between Chinook abundance, elevation and land cover type interaction.  The statistics generally show low confidence that Chinook abundance is affected by elevation and land cover type in these models.  While Fig. 10 highlights confidence that slope has an impact on fish abundance, it does not explain the results with another variable such as land cover type. This theory is supported by literature, and it can be assumed that slope corresponds with high eroision, and increased water sediment, which negatively affects salmonid health. </p>
+                <p>When I compared Chinook abundance to one x variable, natural land cover, the plot revealed a major issue skewing my results: the high 0 counts. Moving forward, it would be interesting to see how a zero inflated modeling approach would change my results.  This would take away the high impact of 0 counts, and focus on the higher quality data. Based on the results , it is not unreasonable to note that land cover might not impact Chinook abundance in this scenario. </p>
+                <p>Based on the results between two variable interaction, and one variable interaction with Chinook abundance, it is not unreasonable to note that land cover type might affect Chinook abundance as we were able to draw results from elevation, but found no significant results from land cover, or the two variable interaction.</p>
+                <p>Additionally, it is worth noting that data collection may have an impact on the results. Lack of fish count data is currently a major limiting factor to understanding negative impacts on salmonid health. This model attempted to use existing available data to draw connectivity between land cover and salmonid health. Unfortunately, when the data was properly clipped and grouped, it only accounted for 111 observations between 1992 and 2005. Therefore, there is a high chance of misrepresented data for 111 observations over 13 years. Therefore, consistent yearly data in these streams would benefit the analysis for understanding affects on Chinook abundance.</p>
+                <p>Altogether, I propose implementing a conservation and monitoring site at North Fork Dillon Creek tributary as it is surrounded by the highest slope within a 100 meter buffer compared to the other streams in Humboldt, Trinity, Del Northe and Siskiyou counties. </p>
+            </div>
+        </div>
+    </div>
+        
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+   
+    </main><!-- /.container -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  </body>
+</html>

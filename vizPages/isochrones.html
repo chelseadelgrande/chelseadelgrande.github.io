@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Health Facility Isochrones Per City</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+<style>
+	body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+    #features {
+    background: rgba(19, 19, 19, 0.8);
+    position:relative;
+    bottom: 0;
+    overflow: auto;
+    border-radius: 15px;
+    padding-left: 15px;	
+    margin-left: 4px;
+    width: 30%;
+    font-family: 'Montserrat', sans-serif;
+    color: whitesmoke
+}
+.legend {
+    bottom: 30px;
+    font-family: 'Montserrat', sans-serif;
+    padding: 10px;
+    position: relative;
+    right: 10px;
+    z-index: 1;
+    
+    }
+     
+    .legend h4 {
+    margin: 0 0 10px;
+    }
+     
+    .legend div span {
+    border-radius: 50%;
+    display: inline-block;
+    height: 10px;
+    margin-right: 5px;
+    width: 10px;
+    }	
+</style>
+</head>
+<body>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css" type="text/css"/>
+<script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
+
+<div id="map"></div>
+
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlbHNlYWRlbGdyYW5kZSIsImEiOiJjazh4aWR3YWsxN3Y1M2dtaDE2YmdydXZ2In0.pwijKELZM0lRR6FzE90T8A';
+  const transformRequest = (url) => {
+    const hasQuery = url.indexOf("?") !== -1;
+    const suffix = hasQuery ? "&pluginName=lunchboxIsochrones" : "?pluginName=lunchboxIsochrones";
+    return {
+      url: url + suffix
+    }
+  }
+  
+  const isoUrl = "https://api.mapbox.com/isochrone/v1/mapbox";
+  const profile = "driving";
+  const minutes = "15";
+  let coords = [43.12 , 36.34]
+
+  const maskExtent = "https://raw.githubusercontent.com/chelseadelgrande/Iraq_healthsites/master/gadm36_IRQ_1.geojson"
+  const pointsUrl = "https://raw.githubusercontent.com/chelseadelgrande/Iraq_healthsites/master/Iraq_healthsites_points.geojson";
+  let points = {};
+  
+  const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/chelseadelgrande/ckablwlyo0u511io7ovywvv6m',
+      center: [43.127007,36.346605],
+      zoom: 10,
+      transformRequest: transformRequest
+  });
+
+  const geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl
+  });
+
+  map.addControl(geocoder, "top-right");
+  
+  //create point grid across iraq to iterate through coordinates
+  var extent = [33.310736, 38.743938, 32.106187, 48.944744]
+  var cellSide = 3;
+  var options = {units: 'miles', mask:maskExtent}
+  const getIso = function() {
+
+    // Concatenate the request
+    let request = `${isoUrl}/${profile}/${coords}.json?contours_minutes=${minutes}&polygons=true&access_token=${mapboxgl.accessToken}`;
+
+    // Make the request, then do the things
+    fetch(request).then(res => res.json()).then(res => {
+      map.getSource("iso").setData(res);
+      
+      const selected = turf.pointsWithinPolygon(points, res);
+      map.getSource("selection").setData(selected);
+      
+      const selectionCount = selected.features.length;
+      console.log(`Number of points within ${minutes} minutes ${profile} of ${coords}: ${selectionCount}`);
+      document.getElementById("htmlpoints").innerHTML = `Number of health facilities within ${minutes} minutes ${profile} from ${coords}: ${selectionCount}`;
+      const area = turf.area(res)
+      const area_trim = area.toFixed(2)
+      console.log(`Area in square meters: ${area}m2`)
+      document.getElementById("htmlarea").innerHTML = `Area in square meters that can be reached within 15 minutes: ${area_trim} m2`;
+    });
+    
+  };
+
+  map.on("load", () => {
+    // Add source and layer for the isochrone
+    map.addSource("iso", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [
+        ]
+      }
+    });
+
+    map.addLayer({
+      "id": "isoLayer",
+      "type": "fill",
+      "source": "iso",
+      "layout": {},
+      "paint": {
+        "fill-color": "purple",
+        "fill-opacity": 0.3
+      }
+    }, "poi-label");
+
+    // Add source and layer for the point data
+    map.addSource("points", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [
+        ]
+      }
+    });
+
+    map.addLayer({
+      "id": "pointsLayer",
+      "type": "circle",
+      "source": "points",
+      "layout": {},
+      "paint": {
+        "circle-color": "#4da6ff",
+      }
+    }, "poi-label");
+
+    // Add source and layer for the selected point data
+    map.addSource("selection", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [
+        ]
+      }
+    });
+
+    map.addLayer({
+      "id": "selectionLayer",
+      "type": "circle",
+      "source": "selection",
+      "layout": {},
+      "paint": {
+        "circle-color": "purple",
+      }
+    });
+
+    // Do this when the geocoder returns a result
+    geocoder.on("result", ev => {
+      coords = ev.result.geometry.coordinates.join(" , ")
+      console.log(coords);
+      getIso();
+    });
+
+    // Fetch the point geojson and set it to a map layer source
+    fetch(pointsUrl).then(res => res.json()).then(res => {
+      points = res;
+      map.getSource("points").setData(points);
+    });
+
+    getIso();
+
+  });
+  map.on('click', 'pointsLayer', function(e) {
+var coordinates = e.features[0].geometry.coordinates.slice();
+var description = e.features[0].properties.amenity;
+ 
+// Ensure that if the map is zoomed out such that multiple
+// copies of the feature are visible, the popup appears
+// over the copy being pointed to.
+while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+}
+ 
+new mapboxgl.Popup()
+.setLngLat(coordinates)
+.setHTML(description)
+.addTo(map);
+});
+ 
+// Change the cursor to a pointer when the mouse is over the places layer.
+map.on('mouseenter', 'pointsLayer', function() {
+map.getCanvas().style.cursor = 'pointer';
+});
+ 
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'pointsLayer', function() {
+map.getCanvas().style.cursor = '';
+});
+map.addControl(new mapboxgl.NavigationControl());
+
+</script>
+<div class='col-4' id='features'><h3>Iraq Health Facilities within 15 Minutes Driving from Location Entered in Search</h3><br>
+        <div id='legend' class='legend'>
+            <div><span style='background:#4da6ff;'></span>Health Facilities</div>
+            <div><span style='background:purple;'></span>Health Facilities within 15 minutes from location</div><br>
+            <div id='htmlpoints'></div><br>
+            <div id='htmlarea'></div>  
+        </div>
+</div>
+</body>
+</html>

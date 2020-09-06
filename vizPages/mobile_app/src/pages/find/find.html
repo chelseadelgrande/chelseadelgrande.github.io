@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-navbar>
+      <ion-buttons start>
+          <button color = "blue" ion-button (click)="goToMapPage(camp.searchType)">
+            <ion-icon name="globe"></ion-icon>
+          </button>
+        </ion-buttons>
+    <ion-title>
+      READY, SET, GO!
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+    <ion-toolbar color="purple">
+        <ion-searchbar color = "purple" [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="Search for a place"></ion-searchbar>
+      </ion-toolbar>
+    
+    
+<div id="pac-input"></div>
+<div id = "mapWow"></div>
+  <ion-fab right bottom>
+    <button color = "purple" ion-button block (click)="showAlert()">
+     <ion-icon name = "basket"></ion-icon>
+    </button>
+  </ion-fab>
+  <ion-card>
+    <ion-card-header>
+
+      <h2>Tell Us When & Where To Meet You.</h2>
+    </ion-card-header>
+    
+    <ion-card-content>
+        <p>*Search for places here, or use the map icon option to find nearby campgrounds. We want you to get the location right!</p>
+        <br/>
+        <ion-list >
+        <ion-item>
+      <ion-label stacked>Select Delivery Method</ion-label>
+        <ion-select  [(ngModel)]="formData.delivery" (ionChange) = "onShipDelivery($event)" interface = "popover">
+          <ion-option *ngFor = "let delivery of deliverys" [value]="delivery" placeholder ="To Camp" >{{delivery}}</ion-option>
+      </ion-select>
+    </ion-item>
+      <div *ngIf = "showOtherInput">
+        <ion-item>
+          <ion-label stacked>Enter Desired Address</ion-label>
+          <ion-input fixed [(ngModel)]="formData.address" type = "text" placeholder = "1234 Chester Street"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label placeholder = "AK" stacked>State</ion-label>
+          <ion-select [(ngModel)]="formData.state"[(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="Search for a place">
+          <ion-option *ngFor ="let state of states" [value] = "state" type = "text" placeholder = "Select a State">{{state}}
+          </ion-option>
+        </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label stacked>Zip Code</ion-label>
+            <ion-input [(ngModel)]="formData.zip" type = "number" placeholder = "XXXXX"></ion-input>
+        </ion-item>
+        </div>
+      
+      
+      <ion-item>
+         
+        <ion-label stacked>Desitnation Campground</ion-label>
+        <ion-input [(ngModel)]="formData.campsites" type = "text" placeholder = "Yosemite National Park"></ion-input>
+      </ion-item>
+     
+      <ion-item>
+          <ion-label stacked>Meet Date & Time</ion-label>
+          <ion-datetime [(ngModel)]="formData.meetDate" displayFormat="YYYY/MM/DD HH:mm" ></ion-datetime>
+        </ion-item>
+      </ion-list>
+        
+       
+       
+        
+
+      <ion-item>
+          <button round color = "blue" ion-button text-center block [disabled]="false" ion-button (click) ="insertCampgrounds()">Submit</button>
+          <button round color = "blue" ion-button text-center block ion-button (click) = "goToRentPage()" >Reset</button>
+        </ion-item>
+
+
+ 
+</ion-card-content>
+</ion-card>
+
+<ion-list [hidden]="autocompleteItems.length == 0">
+  <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+    {{ item.description }}
+  </ion-item>
+</ion-list>
+
+</ion-content>
