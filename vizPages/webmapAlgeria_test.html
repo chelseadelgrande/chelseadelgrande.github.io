@@ -1,0 +1,965 @@
+<!--additional reference guides: 
+https://blog.mapbox.com/clustering-properties-with-mapbox-and-html-markers-bb353c8662ba
+https://docs.mapbox.com/mapbox-gl-js/example/cluster-html/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Concept Example: Algeria Programs</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.css" rel="stylesheet" />
+<link href="https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+    .map-overlay {
+      position: relative;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      right: 20px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      overflow: auto;
+      margin-right: 10px;
+      top:10px;
+      float: right;
+      border: 2px groove white;
+      color: white;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+    }
+
+    #key {
+      background-color: rgba(0, 0, 0, 0.8);
+      width: 22.22%;
+      height: auto;
+      overflow: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .total {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 11px;
+    }
+
+    .table {
+      font-family: 'Montserrat', sans-serif;
+      color: white;
+      border-collapse: collapse;
+    }
+
+    .pie {
+      cursor: pointer;
+    }
+    .mapboxgl-popup-content {
+        background-color: rgba(0, 0, 0, 0.8) !important;
+        /*.mapboxgl-popup-tip border-color:rgba(0, 0, 0, 0.8) !important;*/
+    }
+    .popups, #p{
+        font-family: 'Montserrat', sans-serif !important;
+        font-weight: 800 !important;
+        font-size: 11px !important;
+        color: white !important;
+    }
+</style>
+</head>
+<body>
+  <div id="map"></div>
+  <div class='map-overlay' id='feat'><h2>Concept Example: Algeria Programming Map</h2></div>
+  <input type="button" value="Print this page" onClick="window.print()">
+  <div id="key"></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlbHNlYWRlbGdyYW5kZSIsImEiOiJjazh4aWR3YWsxN3Y1M2dtaDE2YmdydXZ2In0.pwijKELZM0lRR6FzE90T8A';
+var map = new mapboxgl.Map({
+container: 'map',
+zoom: 4,
+center: [3.173522, 29.877139],
+//style: 'https://api.mapbox.com/styles/v1/mapbox/dark-v10.html?title=true&access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA#4/47.54/14.77'
+style: 'mapbox://styles/chelseadelgrande/ck9vly6b10nmf1ino5trtueqk'
+});
+ 
+var nav = new mapboxgl.NavigationControl();
+map.addControl(nav, 'bottom-right')
+
+// colors to use for the categories
+const colors = ['#FFEA80', '#FF8F33', '#00B361', '#C2232B'];
+//bring in d3 lib
+const colorScale = d3.scaleOrdinal()
+    .domain(["active", "suspended", "closed", "canceled"])
+    .range(colors)
+// filters for classifying sectors based on status in geojson file
+//this documentation explains below expression syntax: https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/
+const active = ['==', ['get', 'Status'], 'Active'];
+const suspended = ['==', ['get', 'Status'], 'Suspended'];
+const closed = ['==', ['get', 'Status'], 'Closed'];
+const canceled = ['==', ['get', 'Status'], 'Canceled'];
+ 
+map.on('load', function() {
+// add a clustered geojson source for a sample set of programs
+map.addSource('programs', {
+'type': 'geojson',
+'data': {
+"type": "FeatureCollection",
+"features": [
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.139057739170614, 32.722415104093308 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.985239746173966, 32.491660482674611 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.724866673325578, 32.401563103469968 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.531657243905374, 34.567300349459146 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.009710764075574, 36.415365566069951 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.881517213448961, 34.988872627106076 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.154500931568446, 32.400927282358914 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 8.063750324744719, 32.261117229788645 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.265006136715602, 32.372334767526617 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 8.138691544776226, 32.610321614967177 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.367130440308351, 35.225804476913154 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.234802055644799, 34.173005655230902 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.463773873700094, 30.024598255532162 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.305670731196471, 36.874031210050703 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.406117674451239, 31.384498650265364 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.17670605871738, 31.965485967954443 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 2.504335045315195, 30.519726876750717 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.164632634827323, 35.652056219211225 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.804827832853135, 32.315219439238192 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.330106482105357, 36.137783943782587 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.016636805053429, 32.195182267320966 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 8.145819577454315, 32.709401131351697 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.447413325203708, 31.530950343339107 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.757004452714235, 36.221686015931354 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.743481919032803, 30.519371885444734 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.000617482417589, 35.797668229647179 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.263762334775763, 34.867511757436958 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.890900567424028, 31.021500110885441 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.127266535302383, 35.992622055399728 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 8.228309091247569, 32.841954316024989 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.574236014884735, 34.585270659371183 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.141551705558575, 32.212405249620048 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.585604985812283, 35.150489674733755 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Environment", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.330439398277271, 31.728867005290802 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.17201532388416, 31.921159580256266 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.062976174293534, 33.225574432386011 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.308123536643974, 33.439362163024292 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.565229412401918, 32.177350229513877 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.828965021321315, 30.155054778256677 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.597984310796235, 35.193638995356181 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.307723450660118, 35.109756004945481 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.249405256717376, 33.372969254783627 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.488797500535775, 25.027396271697793 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.020948077781817, 34.404508041647567 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.229351815295639, 31.466822745140334 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.556648801122256, 30.575611056569326 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.52849835291053, 32.397408271212839 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.606652551384231, 35.969096152950669 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.890599937071862, 36.177878311291195 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.510231416735237, 31.145179418323757 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.883208042265514, 30.175296797027933 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.199683941733868, 31.959510858198552 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.076893014134273, 36.665703745086333 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.386869634563903, 33.274282806294757 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.002252995320266, 32.27566500690974 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.626256494005601, 35.548585081120123 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.627083017623801, 32.826238234294003 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.189699872279235, 32.343735852500672 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.029050597861159, 35.546099259105588 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.09245226707734, 31.588015808527079 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.481874976880199, 31.627125195833564 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Peace and Security", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.585080048839948, 36.138748308868713 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.125117527659146, 36.356621562265872 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.748654797171551, 35.114192872092318 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.30734877520147, 36.183826793369306 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.99943408601416, 34.768471889935398 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.813052240711209, 31.358575695930615 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.060043270740068, 33.265371585385701 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.148391702744213, 35.892982058389897 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.487580302086084, 32.3410723815159 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.993259155797491, 35.032227950237242 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.352722891741094, 32.000692417224244 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.340727998796195, 26.01698605123925 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.594360399986598, 32.00305082946003 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.784234123469596, 36.024263394592197 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.170620130900325, 32.688947131200351 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.217952039626408, 31.225933565418515 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 8.26106478916358, 35.531941530880502 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.411344510867144, 34.382127127548557 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 2.690487016609725, 36.078250051047775 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.214749609315335, 31.641697539924625 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.278186968804215, 31.578438077892244 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.940055604855678, 35.293910858416787 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.468125393455085, 32.195142348854098 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.557821819918271, 34.069483622755975 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.19006858122479, 35.061217707871108 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.876706837192939, 35.461036996773402 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.367775393927993, 35.442999472528243 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.734913220567349, 31.469518860667513 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.554855332118095, 35.28349529084209 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.289685225953201, 35.501648531866934 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Health", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.040834981408685, 26.447279306357558 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Education", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.531551562981707, 31.522559477549802 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Education", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.174722600670689, 31.533664917952301 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Education", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 8.092503926776885, 36.434009932002738 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Education", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.757227426091046, 36.088859301161349 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Education", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.417597300225889, 25.16077010405434 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Education", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.834589809786142, 35.828873182176295 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Education", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.787452795293827, 26.428264497295174 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.575987596134086, 35.109590761127905 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.953751041824764, 35.262586207980029 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.374465467800808, 36.632518463669314 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.897418817467072, 35.252037209628583 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.233982328784525, 32.106455524593976 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.734837280733116, 35.290428700595619 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.297983359291258, 30.805837769352792 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.024655399207509, 30.56313621503719 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.062917566054896, 35.597512508339221 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.782421882517037, 34.379653176847576 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.901506528424592, 34.777528922481402 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.056372178006904, 32.401024580900291 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.348464363917206, 32.546326523821058 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.205491705513787, 33.867890364101584 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.534370775619582, 31.221316861483619 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.299338456400125, 31.866086911249656 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.134148472825494, 35.999533730831935 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 2.134097271005924, 36.005753329776354 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.208290492096161, 36.723450884075291 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.294074991835616, 32.902072106086557 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.291398024251916, 36.684988363930792 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.040114081871739, 35.834608747036441 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.056717581134085, 34.482718144709978 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.578697714001194, 33.35882843623731 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.221933354740037, 32.420899926181576 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.188359829557169, 32.971162370687729 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -3.717395602858702, 27.598208508441076 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.758984923856158, 31.023225691141572 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.916007434372322, 31.704463384654225 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.98445722360102, 36.898193597430819 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.161789420223053, 34.475659536398183 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.280544791588078, 30.756672403876959 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.271225828281844, 35.515389342499056 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.079840289529486, 32.895426729357837 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.719922646509831, 35.979592473935881 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.582538272655308, 35.807213678556337 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.43485965499516, 31.832643203176929 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.320420084216644, 32.66498570402743 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -3.14933533341611, 27.743999529836827 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.018680326957596, 33.735726222139881 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.972854502757842, 31.178016287222917 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.2036678705515, 31.356338506863107 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.15035517510006, 35.332215347760773 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.659412481356615, 31.537753766716243 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.097971119259048, 29.951761810372265 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.470531687673742, 30.40744871867728 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.720015675852107, 25.956966095178782 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.21039020483841, 34.743018155218209 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Rubble Removal", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.212740159432354, 35.512153968684046 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.408313534223336, 35.987118987788769 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.208233315070757, 35.007621322737592 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.845562995347509, 31.667111656123183 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.129074682541561, 34.242087555960019 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.392594661298372, 35.058256779401717 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.569523499031637, 26.515407689054868 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -3.207145497779539, 27.44566694998791 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.061671015005963, 35.16006686280074 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.710881099725515, 35.066806654582201 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.45980106471102, 32.175073089596538 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.21555010507679, 35.329102700207415 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.086839030698188, 36.28546401976029 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.164025576874711, 34.95410434602541 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.309604640792066, 31.334366507067045 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.59831013061456, 35.271530067559056 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.017040075492085, 35.269184495577107 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.749462943565042, 30.673480832557448 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.498377761956538, 35.604205304396245 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.681609863093067, 34.09660794058906 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.41098809752273, 36.01632876629801 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.266570928074018, 32.503209971710689 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.806863474224629, 32.440721398172528 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.55430839524867, 34.260339532399087 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.999640527211857, 31.268706841166214 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.193845278698321, 32.167889897593163 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.040001597828576, 36.393268372349482 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.918547504799139, 31.198328040012612 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.548724489799829, 34.539168550240163 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 2.696647625106281, 35.06498168261875 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.000669725858874, 31.037264163956007 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.648798153662994, 34.846850531420664 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.871611027541649, 29.828792075584992 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.991389473369787, 34.885550025976059 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.452598596306336, 25.235954832904767 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.077230280615765, 32.253740531227713 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.175631080914024, 34.993396081471438 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.351032858187598, 32.900582949514238 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.471857408610221, 31.306591296547616 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.324670317102892, 34.814552564865302 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.174317862767367, 36.560858823207795 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.86018663727081, 31.349366347373586 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.567809108584049, 32.702222581059701 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.85001175776155, 33.82601205894732 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.130844743894176, 35.382089793067287 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.952351145084314, 32.389836330351585 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.03648970322737, 35.747500290309873 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.985182960715856, 35.95685818992871 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.230438729717088, 33.974460923577936 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 2.301400392900908, 35.798975936230235 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.919125024201559, 30.416639651148589 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.105880434393908, 29.979021807242873 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.032906529908657, 36.289987105116438 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.261877122334256, 36.61580979905041 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.627075678158548, 30.576617521026634 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.238207992819812, 35.068073949243413 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.645366946565784, 35.466334182913144 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.094502279982553, 36.478229736238575 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 8.075328557442305, 34.507672598176001 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.720606414072879, 36.831645305169658 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.950465934093053, 31.830320608867794 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.447247415391, 31.810328987750736 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.556179162367585, 26.220221380786228 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.147460376639013, 29.192332633886362 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.621006696584873, 36.261715193986802 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.586594815565541, 32.677996940747036 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.962387079156324, 29.989547970819014 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.613097002743185, 36.717661559567418 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 2.763332491812884, 35.962360777926378 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.468564900959649, 35.697432910505675 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.750889748045351, 32.544025454411361 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.47140987884644, 35.695536024775556 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.033045631233331, 35.190410958979754 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.538132258905426, 31.22186083297585 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.590320956046531, 35.804545542362035 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.633925581150413, 34.926786401205788 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.493218898127928, 31.96533901424143 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -3.425033489227639, 27.778896402643095 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.587147281604795, 31.543803056878836 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.240550031972341, 35.201117804165854 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.30315634256405, 35.61412517159232 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 8.479331602960249, 36.867300103173861 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.85463371754595, 35.689002456150874 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.250538911752054, 30.180240118278192 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.888932849446346, 34.321015178461337 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.915548963640028, 36.440857095126802 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.107260777159588, 33.54413798098664 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.922496560095697, 32.592269883963716 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.952006620307892, 32.1487014719307 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.384464571815337, 31.782196974490709 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.008781995230457, 34.265570903908866 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.577707414363679, 31.875016108082406 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 2.393672332611346, 36.441368843573017 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.345272637153722, 32.157486275471413 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.412442892986847, 32.124019578199707 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.8136781954504, 35.78134873801509 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.575666660920266, 33.108234042639921 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.593292660803124, 32.247910555337434 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.559517766627376, 36.97057322757189 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.482748744778981, 30.854532941332437 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.089125481148993, 34.211454458986665 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.361206181399016, 35.680555330995631 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.196709521186544, 30.461784223824651 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.617925789773643, 34.243468862243347 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.286901511892824, 32.393299263704264 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 1.7115591950025, 35.675582999806878 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.05232983645386, 34.927543690940709 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.704800282618019, 34.494970226962394 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.873707017252022, 35.281374063900635 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.833234887209405, 33.174775991966378 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.178738314373808, 35.713226208084691 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -1.32551567059302, 33.240592276922065 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.784656200011943, 31.786254405521206 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.218552521845456, 31.0249451459342 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.074976795263211, 31.211911482449992 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.262190422166373, 32.685481045088054 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.162950378733739, 36.244420331898695 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.568638057039059, 34.358810991162692 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.469177069847543, 33.489292829533326 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.641150898190364, 36.259521848653193 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.447158651929498, 32.789073711115435 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.316884804535323, 35.753705494000783 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.700653621739662, 35.514678294108833 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.386576264681296, 35.888396874623986 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.532261068006789, 35.910136875917388 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 3.417293709253979, 36.197581243911706 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 8.008583171894124, 34.662977296288226 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.422752694169825, 33.950701911434066 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.057279325225215, 29.980727337955837 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 0.537316520405562, 32.907513816141687 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 7.509388064028116, 34.392110312184663 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.747310821612916, 35.237440160977656 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.490947408963534, 35.65903316323508 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.645493263500502, 30.924640396013491 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 4.165500880233497, 35.840795493232214 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.93264797032514, 29.976497743335479 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.894228345275037, 31.399873352731202 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.941565669185026, 36.867545009647628 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 6.800310546480904, 35.937213354034945 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.927909703878062, 34.326141870075176 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.657845941037279, 30.373673574684702 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ 5.924855686531816, 31.60195410814223 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Economic Growth", "Field": null }, "geometry": { "type": "Point", "coordinates": [ -0.084406471367461, 35.447208750718666 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.872711787304633, 35.353799797597674 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.902822962998927, 30.780201125862284 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.689968385601553, 30.475720579840193 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.911253569747871, 35.051359447501611 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.16326808357407, 33.939036225747742 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.986019528388658, 29.218858866190892 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.578587636878128, 34.984151227428249 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.248754410822774, 30.698764193137904 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.648858781961731, 35.353419858403896 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.629857262534112, 31.361605070408402 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.766795705670062, 32.689724150803961 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.094322850343897, 26.190901334767169 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.331311010447242, 32.7766952540169 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.498028350588664, 32.611393162559416 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.319073597946668, 33.525982001775766 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.553402826230571, 33.178211137024505 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.028057644728442, 36.473440220768239 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.413027009263329, 35.370469547955629 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.90373035028734, 31.213399476351235 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.235322570515891, 35.295460179472755 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.450043582621617, 32.54314592048447 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.979619437145676, 35.391961618577689 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.29881504895142, 32.574035431790421 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.196540508053921, 35.003375046210152 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.169022713820607, 30.847077636421261 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.764502637608894, 31.198001761070739 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.959854634956397, 35.010376135582796 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.570410598648461, 30.527292365589297 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Suspended", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.061916743517252, 35.309057731497369 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.612802203051012, 35.837572296283142 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.911180537427308, 31.386473419581026 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.05277100611968, 34.058277088928847 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.554018519526802, 31.871095830817374 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.394580882042877, 35.04101252329788 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.356548515233077, 31.570367093843142 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.404829104598117, 35.842348650070726 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.333776819689033, 33.286227402596779 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.34238598944041, 33.451363013638037 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.034304617216349, 36.519353122358524 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.710323864742668, 32.390873104888065 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.799724079792917, 36.310752867272228 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.536005174275757, 34.307926053620619 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.795779158287218, 33.125066185672779 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.0649964903576, 30.296386939537186 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.569570261278793, 36.14480340827712 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.482258642316017, 32.610187513816413 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.077781559058018, 36.552494583316005 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.088410609459848, 29.959400813430801 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.495375516312876, 35.420657925025914 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.199329035166419, 35.262007488302118 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.484896936756375, 36.238478180590398 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.577985400137717, 31.169130451993556 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.728063568678808, 35.049475854381484 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.814500696491415, 32.517437150012086 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.745999495296446, 36.353167810113298 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.87082860309147, 30.915587689300196 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.129017449926665, 29.824761059373969 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.96426296946025, 36.619531641267692 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.091279469493659, 35.830031676585811 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.468524637657143, 36.651735930622287 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.292589477916944, 33.263620105601355 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.375299380848142, 32.46795241546846 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.114095317367917, 34.73338862815222 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.255189406557021, 36.410177633784983 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.283135346337573, 35.142653875604104 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.907125229074796, 31.859203231907049 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -3.459356498504718, 27.608006028837671 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.868663810190704, 35.373931125130696 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.738980682225407, 36.608042660341084 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.424005536187058, 26.246575199832304 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.387074218276449, 31.266319049212385 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.459116560242066, 32.982452349712318 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.921592765977544, 30.662487038521299 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.01433860806642, 35.517332682174832 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.706690524541862, 32.837866200580876 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.399973673014084, 32.257534385866364 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.152626023567855, 35.452661074006372 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.880714329950189, 31.13247109199137 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.497151119878213, 34.354321070324943 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.506337898167822, 32.450091600837581 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.568993600734046, 32.726939679639202 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.12120887584882, 33.373163865861947 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.775743709326571, 34.938070978753402 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.094186503591959, 33.567735491297768 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.911449339985318, 35.298422277342787 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.282709773465641, 32.371087166485935 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.371625837877176, 35.19845306021513 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.950274094009085, 35.352025344567679 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.280280930398851, 32.293809514910791 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.818555804337869, 32.847179576743265 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.259177859933445, 35.199725334397158 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.359958411631522, 36.218929021535239 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.65138382540915, 35.293472552193236 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.243040941765117, 32.745657385472796 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.720853206101549, 30.492324092516149 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.034274727425348, 35.104770964749555 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.073540742027951, 26.433347432587603 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.636159127469728, 30.550561023263302 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.488153593854599, 32.437055400674787 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.360322236264532, 36.488444239104929 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.586252045213879, 34.962312145420725 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.038780667348119, 32.42310027155559 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.301718737138823, 31.465283436664429 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.709171337217363, 34.445015517284624 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.111798022567287, 35.839585898681982 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.085944383458209, 31.196447078010873 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.17403059540297, 35.749034758903122 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.269203140630863, 35.395642587405185 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.163236051154162, 32.342707465368164 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.235919734005872, 36.27701573431591 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.496993400179593, 29.985953318088427 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.955031324516596, 30.324562251454491 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.330889531122513, 32.599162973426239 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.817967265917114, 33.728443302940619 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.796327147401874, 32.010523071675834 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.017186990476288, 35.578026086194058 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -3.672795008858335, 27.550443819592893 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.820780188239171, 35.176548867906355 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.184497204178601, 36.200140615707646 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.427195852705168, 35.342586005121873 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.138447179019083, 35.643817250186878 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.340531291521259, 25.347502407703921 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.54471403159401, 32.261023647193035 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.354051685656533, 36.775344329702236 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.304063772595622, 36.650619585390601 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.519237309905087, 34.747982945587545 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.60503185423161, 36.762642816221181 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.034564833814237, 31.73605432157002 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.012639167096715, 36.263463407490264 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.394149102191632, 35.089342713263157 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.414347440109419, 36.107321597443452 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.006257461912072, 30.305326407072211 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.872867612408078, 34.270320411537526 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.146620545899081, 33.012610489102883 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.81327649322921, 35.721898649516525 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.191268748289215, 35.055006045971439 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.385329670065407, 33.432267935857908 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.05328680653096, 34.477408420064762 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.160427588680777, 31.442015646274172 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.543323879449587, 33.640212896738142 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.165053087322534, 31.17623765363232 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.814187892177795, 33.607771120480052 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.156979755485665, 36.605501565824625 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.090169946556719, 34.026249506290284 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.888370378272209, 36.656051075342624 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.048916450418055, 35.768816567054422 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.489849812207566, 36.57720723527985 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.311207000741759, 25.361031277737624 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.161189303842012, 35.772156655960458 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.136681605372774, 34.941045236448268 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.008040380769237, 29.302131670075379 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.85755400572217, 35.091263831058974 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.305566852527413, 30.236307087004565 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.012783148977405, 34.394808619569986 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.786250873709045, 36.673082151817255 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.467061065573333, 33.398843972697129 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.444730109539937, 35.255368282924103 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.112589548390587, 32.375625411828835 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.959968636725221, 30.141421561170262 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.342864074924674, 32.263747093172384 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.321177651797846, 32.489700102475226 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.243548257370728, 33.782232878643093 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.41423626921309, 33.483908583769036 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.94185450370237, 31.67934714467248 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.325311469392174, 34.557324557508529 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.633618365104091, 36.460531203081608 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.435958831668536, 36.563223670307579 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.582229651067365, 35.921419422094026 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.367380044130286, 31.918679078727834 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -2.072497871618283, 35.043635622634383 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.734828410812169, 31.698505009138554 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.24154378922934, 34.988770423252205 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.607967478131917, 32.528018733742748 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.693510837454172, 32.843259596875043 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.157455449507165, 36.180870200007988 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.931954854745468, 35.703794172027138 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.26240017983224, 36.09465498090686 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.618796902673438, 36.065434752152377 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.543168143618534, 31.03424740046491 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.135518165000337, 35.727257607028761 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.448225674439389, 35.844319112523237 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.315702515459623, 35.6357480609852 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -3.211518020354389, 27.567912977565491 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.198130936851969, 31.171702405791649 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.703256645881672, 32.64604429389891 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.307570395413465, 35.570148472090082 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.852155904362642, 31.160809391363085 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.318874247225737, 33.106722326155065 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.790709927416609, 35.559021248778556 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.020515571930585, 34.527787182794839 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Education", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.08933460188745, 32.745276465997023 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.572680232891314, 36.681010820820696 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.465423484323931, 30.40400516762115 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.027817631188, 30.272702953402771 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.619550751491481, 35.194754690137444 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.598765913529769, 35.628429079699579 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.013625609441047, 36.703923508374764 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.650113591876831, 33.670604276976078 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.518127932892664, 35.20719551064667 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.08604634678059, 35.150572622053986 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.484928536854118, 35.511052283256895 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.301452969707752, 32.651112325995399 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.31032810565208, 35.153238629207088 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.127950303832802, 30.347754078044126 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.645434475362507, 32.647756297079624 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.31064942438948, 36.335317517357296 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.356963813020095, 30.598594925125376 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.874503134575019, 31.177069525918558 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.825322107162739, 30.442778548476625 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.831724130545023, 35.28131085175351 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.470015181845151, 34.259092557933471 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.668099558690979, 33.419507399795208 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.030255438342419, 35.947428096830038 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.464878550950511, 35.184372911323678 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.33771835186753, 33.197304367780774 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.502775690728749, 32.271386357034714 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.028115121296622, 32.439569270700055 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.136642704187905, 36.676190919740101 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.15867142426918, 31.404339119750578 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.692094094447476, 36.873682355324291 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.123419118420973, 32.165404737507806 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.959391023810146, 34.705621890843695 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.65623310756329, 36.898555370812616 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.668982450588136, 30.418438549655164 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.628849539153403, 33.238945654997643 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.807692404393322, 35.746945392013551 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.514942312585454, 35.726677042819986 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.290090700816833, 35.986649706951994 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.229410958891251, 31.378552669004087 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.439488231507529, 35.747555840320501 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.638164964564917, 32.559965022832586 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.425843279475028, 33.069476010850636 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.698671880605311, 32.777701126474533 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.43508365361205, 36.648387585142672 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.506038529867743, 35.024243080810869 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.027674277883886, 35.200110795188955 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.980807193696048, 30.029665673769781 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.650485231469061, 36.006813607292173 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.94140710045976, 30.582187605352871 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Closed", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.891404207476203, 34.496406644112618 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.654122781132313, 36.752261384734794 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.839879326825653, 31.276894878581324 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.235368022758974, 32.78678197816275 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.581722688607837, 32.63577601554978 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.051267460510594, 32.917454844736 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.146746146646107, 32.731167808719739 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.041079026879832, 32.700028245339134 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.136472205124909, 30.402294393411871 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.303030461445347, 32.476982440262169 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.741198610792468, 32.234325790027363 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.245475957557685, 35.320706741659322 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.300509111580829, 34.251000605161806 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.487824789767988, 35.45904429878366 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.320170301393578, 33.309024772052169 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.736399954028608, 31.648111059580469 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.613205451291877, 31.799211511379767 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.479468427971631, 36.513824258260115 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.206223860114751, 31.583449506260077 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.794279147298392, 32.23155255229409 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.752438238096889, 36.185628832024513 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.337850977828479, 32.338316310379362 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 8.088754702546929, 32.822411349934988 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.746632061704813, 26.07156832866136 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.794635230377836, 34.427270355839035 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.130543932965699, 34.867287069577792 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.407748630178371, 32.999557201358257 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.231213951611314, 36.593025321549547 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 5.115991771270213, 31.425850381824628 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.844138220206849, 34.91748968874532 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.863008840254666, 36.668048335433724 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.558635916094247, 35.905030280327196 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.783026832067161, 36.299268272817216 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.309816445795571, 34.734090113669616 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.616565280863461, 31.499572109588499 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.84247698670559, 33.720893027280646 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.262364397381187, 32.024959205250568 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.192102252371059, 31.546270141956398 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.934044069851153, 33.137344566801993 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.414388268309022, 32.111122823374146 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.669166585746781, 36.855018918205587 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.350185280751107, 32.005528620837921 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -3.112984421129114, 27.559417225039269 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.569741744676071, 31.504292115209161 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.373412137810909, 33.720759056540786 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.087214333790341, 33.243605016340979 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.820240592099863, 32.200871209912606 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.230079047229817, 32.533769930559785 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.268166182955201, 35.547961804417596 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.824641174601595, 33.211817757961697 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.858409302291189, 31.528253251200134 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.308864343302145, 32.684798144420455 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.428333345332706, 31.753237939843117 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.211845077111144, 32.461886141314714 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.03501018183521, 30.828067038206694 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.494590192392445, 33.411586642968373 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.514169589183879, 34.738817109466801 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.944506772790269, 32.188310827926976 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Health", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.077399746013024, 34.462016688524102 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Peace and Security", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.134278210297704, 32.733139904208095 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.125677382881011, 36.461638516416592 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Rubble Removal", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 4.853971067870045, 32.329001140729339 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -1.699401596723789, 34.513701463294808 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Environment", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.847668934418884, 36.243843494048164 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Canceled", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.728386980830816, 32.837229923398141 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ -0.224874200724283, 33.115126804839001 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 0.483784396526143, 36.157418964349915 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.602824363354322, 36.587106472162574 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.672909495688428, 34.9081833384747 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.802396207631975, 31.412080987393715 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.539537543052218, 36.472989206869727 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 2.642950205340055, 36.054640438679655 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.644707652140069, 35.041043600389429 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.522308214180025, 35.704543585820758 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.998754096973906, 35.427459123252369 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.430664407412666, 32.428333920388262 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.88475930474984, 32.447052526441084 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.792379559930885, 35.190206878490983 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 6.710662264885825, 32.626938455748643 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.752184999616572, 33.320667228116363 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 1.307918125893798, 31.943461730904893 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 7.783228050227266, 32.718570838633156 ] } },
+{ "type": "Feature", "properties": { "CID": 0, "Status": "Active", "Sector": "Tourism", "Field": 0 }, "geometry": { "type": "Point", "coordinates": [ 3.164919539075337, 30.216564587256919 ] } }
+]
+},
+'cluster': true,
+'clusterRadius': 30,
+'clusterProperties': {
+// keep separate sector counts for each cluster
+'active': ['+', ['case', active, 1, 0]],
+'suspended': ['+', ['case', suspended, 1, 0]],
+'closed': ['+', ['case', closed, 1, 0]],
+'canceled': ['+', ['case', canceled, 1, 0]],
+}
+});
+// circle and symbol layers for rendering individual programs (unclustered)
+map.addLayer({
+'id': 'program_circle',
+'type': 'circle',
+'source': 'programs',
+'filter': ['!=', ['get','cluster'], true],
+'paint': {
+'circle-color': [
+    'case',
+    active,
+    colors[0],
+    suspended,
+    colors[1],
+    closed,
+    colors[2],
+    colors[3]
+],
+'circle-opacity': .9,
+'circle-radius': 4
+}
+});
+ 
+// tracks the marker counts and pushes out
+let markers = {};
+    let markersOnScreen = {};
+    let point_counts = [];
+    let totals;
+
+    const getPointCount = (features) => {
+      features.forEach(f => {
+        if (f.properties.cluster) {
+          point_counts.push(f.properties.point_count)
+        }
+      })
+      return point_counts;
+    };
+
+    const updateMarkers = () => {
+      document.getElementById('key').innerHTML = '';
+      let newMarkers = {};
+      //query the elements https://docs.mapbox.com/android/maps/overview/query/
+      const features = map.querySourceFeatures('programs');
+      totals = getPointCount(features);
+      features.forEach((feature) => {
+        const coordinates = feature.geometry.coordinates;
+        const props = feature.properties;
+        if (!props.cluster) {
+          return;
+        };
+        const id = props.cluster_id;
+
+        let marker = markers[id];
+        if (!marker) {
+          const el = createDonutChart(props, totals);
+          marker = markers[id] = new mapboxgl.Marker({
+            element: el
+          })
+          .setLngLat(coordinates)
+        }
+
+        newMarkers[id] = marker;
+
+        if (!markersOnScreen[id]) {
+          marker.addTo(map);
+        }
+      });
+
+      for (id in markersOnScreen) {
+        if (!newMarkers[id]) {
+          markersOnScreen[id].remove();
+        }
+      }
+        markersOnScreen = newMarkers;
+    };
+
+    const createDonutChart = (props, totals) => {
+      const div = document.createElement('div');
+      const data = [
+        {type: 'active', count: props.active},
+        {type: 'suspended', count: props.suspended},
+        {type: 'closed', count: props.closed},
+        {type: 'canceled', count: props.canceled},
+      ];
+
+      const thickness = 3;
+      const scale = d3.scaleLinear()
+        .domain([d3.min(totals), d3.max(totals)])
+        .range([25, d3.max(totals)])
+
+//radius increased so visible here
+      const radius = (Math.sqrt(scale(props.point_count))+4);
+      const circleRadius = (radius - thickness);
+
+      const svg = d3.select(div)
+        .append('svg')
+        .attr('class', 'pie')
+        .attr('width', radius * 2)
+        .attr('height', radius * 2);
+
+      //center
+      const g = svg.append('g')
+        .attr('transform', `translate(${radius}, ${radius})`);
+
+      const arc = d3.arc()
+        .innerRadius(radius - thickness)
+        .outerRadius(radius);
+
+      const pie = d3.pie()
+        .value(d => d.count)
+        .sort(null);
+
+      const path = g.selectAll('path')
+        .data(pie(data.sort((x, y) => d3.ascending(y.count, x.count))))
+        .enter()
+        .append('path')
+        .attr('d', arc)
+        .attr('fill', (d) => colorScale(d.data.type))
+
+      const circle = g.append('circle')
+        .attr('r', circleRadius)
+        .attr('fill', 'rgba(0, 0, 0, 0.7)')
+        .attr('class', 'center-circle')
+
+      const text = g
+        .append("text")
+        .attr("class", "total")
+        .text(props.point_count_abbreviated)
+        .attr('text-anchor', 'middle')
+        .attr('dy', 5)
+        .attr('fill', 'white')
+
+        const infoEl = createTable(props);
+
+        svg.on('click', () => {
+          d3.selectAll('.center-circle').attr('fill', 'rgba(0, 0, 0, 0.7)')
+          circle.attr('fill', 'rgb(71, 79, 102)')
+          document.getElementById('key').innerHTML = '';
+          document.getElementById('key').append(infoEl);
+        })
+
+      return div;
+    }
+
+    const createTable = (props) => {
+      const getPerc = (count) => {
+        return count/props.point_count;
+      };
+
+      const data = [
+        {type: 'active', perc: getPerc(props.active)},
+        {type: 'suspended', perc: getPerc(props.suspended)},
+        {type: 'closed', perc: getPerc(props.closed)},
+        {type: 'canceled', perc: getPerc(props.canceled)},
+      ];
+
+      const columns = ['type', 'perc']
+      const div = document.createElement('div');
+      const table = d3.select(div).append('table').attr('class', 'table')
+      const theader = table.append('theader')
+  		const thead = table.append('thead')
+  		const	tbody = table.append('tbody');
+
+  		thead.append('tr')
+  		  .selectAll('th')
+  		  .data(columns).enter()
+  		  .append('th')
+		    .text((d) => {
+          let colName = d === 'perc' ? '%' : 'Activity Status'
+          return colName;
+        })
+
+  		const rows = tbody.selectAll('tr')
+  		  .data(data.filter(i => i.perc).sort((x, y) => d3.descending(x.perc, y.perc)))
+  		  .enter()
+  		  .append('tr')
+        .style('border-left', (d) => `20px solid ${colorScale(d.type)}`);
+
+  		// create a cell in each row for each column
+  		const cells = rows.selectAll('td')
+  		  .data((row) => {
+  		    return columns.map((column) => {
+            let val = column === 'perc' ? d3.format(".2%")(row[column]) : row[column];
+  		      return {column: column, value: val};
+  		    });
+  		  })
+  		  .enter()
+  		  .append('td')
+		    .text((d) => d.value)
+        .style('text-transform', 'capitalize')
+
+  	  return div;
+    }
+
+    map.on('data', (e) => {
+      if (e.sourceId !== 'programs' || !e.isSourceLoaded) return;
+
+      map.on('move', updateMarkers);
+      map.on('moveend', updateMarkers);
+      updateMarkers();
+    });
+});
+map.on('click', 'program_circle', function(e) {
+new mapboxgl.Popup({className:'popups'})
+.setLngLat(e.lngLat)
+.setHTML("<p>Status: " + e.features[0].properties.Status + "<br>Sector: </p>" +e.features[0].properties.Sector)
+.addTo(map);
+
+map.on('mouseenter', 'program_circle', function() {
+map.getCanvas().style.cursor = 'pointer';
+});
+ 
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'program_circle', function() {
+map.getCanvas().style.cursor = '';
+});
+});
+</script>
+</body>
+</html>
