@@ -15,7 +15,7 @@
 <style>
     .map-overlay-container {
         position: absolute;
-        width: 25%;
+        width: 28%;
         top: 0;
         left: 0;
         padding: 10px;
@@ -34,16 +34,21 @@
     .map-overlay p {
         margin: 0 0 10px;
     }
+    .map-overlay i{
+        font: 10px;
+    }
 </style>
 
 <div id="map"></div>
 
 <div class="map-overlay-container">
     <div class="map-overlay">
+        <h1>CURSE OF THE QUARTER</h1>
+        <p><i>Do you believe the 50 State quarter collection was cursed?</i></p>
         <h2 id="location-title"></h2>
         <p id="location-description"></p>
         <small
-            >Text credit:
+            >Source:
             <a target="_blank" href="https://money.cnn.com/2003/05/15/pf/banking/quarter_curse/"
                 >CNN.com</a
             ></small
@@ -56,10 +61,10 @@
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
-        center: [-74.0315, 40.6989],
+        center: [-97.998722, 40.591782],
         maxZoom: 16,
-        minZoom: 9,
-        zoom: 9.68
+        minZoom: 3,
+        zoom: 3
     });
 
     var title = document.getElementById('location-title');
@@ -68,46 +73,58 @@
     var locations = [
         {
             'id': 'Maryland',
-            'title': 'Maryland',
+            'title': 'Maryland | Annapolis',
             'description':
                 "The quarter depicts the statehouse in Annapolis, America's oldest legislative building still in use as a capitol. Last summer, the historic wooden cupola was struck by lightning, starting a small fire, which had to be extinguished by automated sprinklers.",
             'camera': {
                 center: [-76.490904, 38.978901],
                 zoom: 12.21,
-                pitch: 50
+                pitch: 50,
+                speed: .5,
+                curve: 1,
+                bearing: -18,
+                essential: true
             }
         },
         {
             'id': 'New Jersey',
-            'title': 'New Jersey',
+            'title': 'New Jersey | Delaware River',
             'description':
                 "Washington's crossing of the Delaware was a pivotal event, justly honored on the coin of the state where he landed. Was something more than meteorology involved when an annual re-enactment of the crossing was cancelled last December? The span is only about a mile wide, but severe wind, snow, and ice prevented the annual event from happening.",
             'camera': {
                 center: [-75.458694, 39.729171],
-                bearing: -8.9,
-                zoom: 11.68
+                bearing: 16,
+                zoom:11.68,
+                speed: .5,
+                curve: 1,
+                essential: true
             }
         },
         {
             'id': 'Kentucky',
-            'title': 'Kentucky',
+            'title': 'Kentucky | Churchill Downs',
             'description':
                 'The Bluegrass State takes its equine traditions seriously, so it chose a thoroughbred and the inscription, "My Old Kentucky Home." That theme song was heard at Churchill Downs again this year -- serenading Funny Cide, the first native New Yorker to win the Kentucky Derby. For proud locals, the fact that the horse is a gelding may have proved particularly emasculating.',
             'camera': {
                 center: [-85.770017, 38.203048],
-                bearing: 25.3,
-                zoom: 11.5
+                curve: 1,
+                bearing: 16,
+                zoom: 10,
+                speed: .5,
+
             }
         },
         {
             'id': 'Rhode Island',
-            'title': 'Rhode Island',
+            'title': 'Rhode Island | Newport',
             'description':
                 "America's Cup was lost two decades ago. Even so, Rhode Island's quarter celebrates open-sea ocean sailing, perhaps in anticipation of the Cup's return to its historic Newport home. The prize did change hands this year -- but it went to a boat from Switzerland, a landlocked country where sea-faring is literally impossible.",
             'camera': {
                 center: [-71.310253, 41.475778],
-                bearing: 36,
-                zoom: 11.37
+                zoom: 11.37,
+                speed: .5,
+                curve: 1,
+
             }
         },
         {
@@ -117,8 +134,13 @@
                 "Helen Keller appears on Alabama's coin, released in March 2003. Barely a month later, a much-anticipated revival of 'The Miracle Worker' was forced to close before it even made it to Broadway, the New York Post reported.",
             'camera': {
                 center: [-86.268023, 32.355323],
-                bearing: 28.4,
-                zoom: 4.54
+                bearing: 0,
+                pitch: 0,
+                zoom: 5.33,
+                speed: .5,
+                essential: true,
+                curve: 1,
+
             }
         },
         {
@@ -130,7 +152,11 @@
                 center: [-80.828891, 35.226392],
                 zoom: 5.23,
                 bearing: 0,
-                pitch: 0
+                pitch: 0,
+                speed: .1,
+                essential: true,
+                curve: 1,
+
             }
         }
     ];
