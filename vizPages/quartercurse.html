@@ -6,7 +6,7 @@
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css" rel="stylesheet" />
-<style>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap" rel="stylesheet"><style>
 	body { margin: 0; padding: 0; }
 	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
 </style>
@@ -23,8 +23,10 @@
     }
 
     .map-overlay {
-        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-        background-color: #fff;
+        font-size: 12px;
+        font-family: 'Source Sans Pro', sans-serif;
+        color: #ffffff;
+        background-color: #5c5b53;
         border-radius: 3px;
         padding: 10px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -60,7 +62,7 @@
 	mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlbHNlYWRlbGdyYW5kZSIsImEiOiJjazh4aWR3YWsxN3Y1M2dtaDE2YmdydXZ2In0.pwijKELZM0lRR6FzE90T8A';
     var map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
+        style: 'mapbox://styles/chelseadelgrande/ckesr8o9b00q019mm99iayipc',
         center: [-97.998722, 40.591782],
         maxZoom: 16,
         minZoom: 3,
